@@ -1,13 +1,68 @@
-% Test script
-% JUST A COMMENT - LORENZO - deleteme
-clear all
-close all
-dbstop if error
+% I.Function Description : dataset_analysis
+%==========================================
+% II. INPUT:
+%==========
+%   1. data_dir
+%       the directory of the raw training data, has to contain 3 folders:
+%       (1) gt:     *.txt files
+%       (2) Images: *.jpg
+%       (3) mask :  *.png
+%   2. plot_flag: 
+%       to create histogram plots of the data.
+%
+% III. OUTPUT:
+%=============
+%   1.statistic_table
+%       class: struct
+%       fields:
+%           'type'          : char   [1X1]
+%               A/B/C/D/E/F
+%           'number'        : double [1X1]
+%               number of apperances of each sign type.
+%
+%           'form_factor'   : double [1X2]
+%               min-max values of the form_factor for each type
+%
+%           'fill_factor'   : double [1X2]
+%               min-max values of the fill_factor for each type
+%
+%           'A'             : double [1X2]
+%               min-max values of the square area according to the gt file 
+%               coordinates for each type
+%
+%   2.all_data
+%       class: struct
+%       fields:
+%           'file_id'       : char   [1X9]
+%              image id - example: 01.013256 
+%           'type'          : char   [1X1]
+%               A/B/C/D/E/F
+%           'A'             : double [1X1]
+%               the square area according to the gt file 
+%               coordinates for each type
+%           'form_factor'   : double [1X1]
+%               mask/A
+%           'fill_factor'   : double [1X1]
+%
+%           'color_wrbk'    : char   [1X4]
+%           [white-red-blue-black]
+%           'shape'
+%
+%           'index'         : double [1X1]
+%               the index for the specific sign in the mask file
+function [statistic_table,all_data] = dataset_analysis(data_dir,plot_flag)
+
+% INPUT CHECK
+if nargin<2
+    plot_flag = false;
+end
+
+
 type_legend = {'A','B','C','D','E','F'};
 shape_legend = {'up_tri','down_tri','circle','cube'};
 
-mask_dir = 'C:\Users\Lorenzo\Documents\team2\train\train\mask';
-gt_dir = 'C:\Users\Lorenzo\Documents\team2\train\train\gt';
+mask_dir = fullfile(data_dir,'mask');
+gt_dir  = fullfile(data_dir,'gt');
 
 all_gt_file = dir(fullfile(gt_dir,'*.txt'));
 all_gt_file = {all_gt_file.name};
@@ -93,7 +148,7 @@ end
 %I. basic - statistic
 % form_factor and fill factor are [min,max]
 statistic_table = struct('type','','number',0,'form_factor',[0,0],'fill_factor',[0,0],'A',[0,0]);
-Color_spec = hsv(length(type_legend));
+
 
 for ii = 1: length(type_legend)
     tmp = all_data(strcmp({all_data.type},type_legend{ii}));
@@ -131,29 +186,30 @@ for ii = 1: length(type_legend)
     Y3(:,ii) = tmp_hist3/statistic_table(ii).number;
     
 end
-figure(1);
-bar3(num_bin_fill,Y1)
-gca
-set(gca,'XTickLabel',type_legend);
-%set(gca,'YLim', [-0.05,1.05]);
-title({'Fill-Factor histogram'; 'Normalized by the number of object per type'})
-legend(Type_number_str)
-figure(2);
-bar3(num_bin_form,Y2);
-set(gca,'XTickLabel',type_legend);
-%set(gca,'YLim', [-0.05,1.05]);
-title({'Form-Factor histogram'; 'Normalized by the number of object per type'})
-legend(Type_number_str)
-
-% ploting the patch histogram of the patch Area ( number of pix)
-%
-figure(3);
-bar3(num_bin_area,Y3);
-set(gca,'XTickLabel',type_legend);
-%set(gca,'YLim', [-0.05,1.05]);
-title({'Area size [pix] histogram'; 'Normalized by the number of object per type'})
-legend(Type_number_str)
-
+if plot_flag
+    figure(1);
+    bar3(num_bin_fill,Y1)
+    gca
+    set(gca,'XTickLabel',type_legend);
+    %set(gca,'YLim', [-0.05,1.05]);
+    title({'Fill-Factor histogram'; 'Normalized by the number of object per type'})
+    legend(Type_number_str)
+    figure(2);
+    bar3(num_bin_form,Y2);
+    set(gca,'XTickLabel',type_legend);
+    %set(gca,'YLim', [-0.05,1.05]);
+    title({'Form-Factor histogram'; 'Normalized by the number of object per type'})
+    legend(Type_number_str)
+    
+    % ploting the patch histogram of the patch Area ( number of pix)
+    %
+    figure(3);
+    bar3(num_bin_area,Y3);
+    set(gca,'XTickLabel',type_legend);
+    %set(gca,'YLim', [-0.05,1.05]);
+    title({'Area size [pix] histogram'; 'Normalized by the number of object per type'})
+    legend(Type_number_str)
+end
 % Explanation to the data analysis
 %==================================
 % Fill Factor
@@ -188,3 +244,4 @@ legend(Type_number_str)
 % it will be harder to detact a traffic sign from far distance because it contain
 % less data (pixels) to Analyze- for exp: it will be harder to detrmine the
 % shape because of the quntization.
+end
