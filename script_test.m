@@ -1,13 +1,13 @@
 % Test script
-
+% JUST A COMMENT - LORENZO - deleteme
 clear all
 close all
 dbstop if error
 type_legend = {'A','B','C','D','E','F'};
 shape_legend = {'up_tri','down_tri','circle','cube'};
 
-mask_dir = 'task2\Training_2017\train\mask';
-gt_dir = 'task2\Training_2017\train\gt';
+mask_dir = 'C:\Users\Lorenzo\Documents\team2\train\train\mask';
+gt_dir = 'C:\Users\Lorenzo\Documents\team2\train\train\gt';
 
 all_gt_file = dir(fullfile(gt_dir,'*.txt'));
 all_gt_file = {all_gt_file.name};
