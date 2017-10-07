@@ -28,8 +28,9 @@ tl = [A(1,:)',A(2,:)']; % line- col
 br = [A(3,:)',A(4,:)'];
 type = char(A(5,:)');
 box_size = br-tl;
-h = box_size(:,1);
-w = box_size(:,2);
+% units [pixel] -- the coordinates are given in float
+h = round(box_size(:,1));
+w = round(box_size(:,2));
 
 end
 
