@@ -4,7 +4,7 @@ clear all
 
 addpath(genpath(fileparts(mfilename('fullpath'))));
 
-data_dir = '..\train\train';
+data_dir = 'train/train';
 plot_flag = 1;
 
 
@@ -26,7 +26,7 @@ redmax= 0.5; redmin= 0.9;
 
 %TASK 4
 
-
+task4 (all_data);
 
 
 
