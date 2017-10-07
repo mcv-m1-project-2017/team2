@@ -2,6 +2,7 @@ function [ all_data_struct_out ] = split_data( statistic_table,all_data_struct )
 Types = {'A','B','C','D','E','F'};
 %split_data
 %   ?????
+% trial
 %==================================================================================
 % We want samples from 3 different criterias in each group (the training & the test data-set):
 % 1. Area
