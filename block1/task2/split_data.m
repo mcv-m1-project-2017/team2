@@ -90,17 +90,22 @@ for ty = 1: length(statistic_table)
         tmp_R   =   R_block([Area_block(:)==Acomb(ii,2) & form_block(:)==Acomb(ii,1)]);
         % random pick
         Count = round(type_count/size(Acomb,1));
-        
+        tmp_ii = 1;
+        tmp_val_id = {};
+        tmp_val_R = [];
         while Count>0 && ~isempty(tmp_block)
             logic_idx = false(size(tmp_block));
             I_block = randperm(length(tmp_block),1);
             logic_idx(I_block) = true;
             validation_id{total_count} = tmp_block(I_block).file_id;
-            
-            in_list_idx = find([strcmp({all_data_struct_out.file_id},tmp_block(I_block).file_id)]);
-            for ss =1: tmp_R(I_block)
-                all_data_struct_out(in_list_idx(ss)).validation = 1;
-            end
+            all_data_struct_out=update_validation_field(all_data_struct_out,tmp_block(I_block).file_id,1);
+            %             in_list_idx = find([strcmp({all_data_struct_out.file_id},tmp_block(I_block).file_id)]);
+            %             for ss =1: tmp_R(I_block)
+            %                 all_data_struct_out(in_list_idx(ss)).validation = 1;
+            %             end
+            tmp_val_id{tmp_ii} = tmp_block(I_block).file_id;
+            tmp_val_R(tmp_ii) = tmp_R(I_block);
+            tmp_ii = tmp_ii+1;
             total_count = total_count+1;
             % count down the number of picks
             Count       = Count-tmp_R(I_block);
@@ -108,9 +113,43 @@ for ty = 1: length(statistic_table)
             tmp_R       = tmp_R(~logic_idx);
         end
         
+        % if we choose to much for the validation group
+        if Count<0
+            % Number of un-wanted signs
+            [tmp_val_R,tmpI] = sort(tmp_val_R,'descend');
+            tmp_val_id = tmp_val_id(tmpI);
+            
+            
+            while 1
+                
+                if all(tmp_val_R > (-Count))
+                    break
+                end
+                tmpI = find(tmp_val_R <= (-Count),1,'first');
+                [all_data_struct_out] = update_validation_field(all_data_struct_out,tmp_val_id{tmpI},0);
+                if tmp_val_R(tmpI) == (-Count)
+                    break
+                end
+                % not going to be choosen
+                
+                Count = Count+tmp_val_R(tmpI);
+                tmp_val_R(tmpI) = 1-Count;
+                
+            end
+            % remove the image from the list
+        end
+        
     end
-    
 end
 
 end
 
+
+
+function [all_data] = update_validation_field(all_data,file_id,val_flag)
+in_list_idx = find([strcmp({all_data.file_id},file_id)]);
+
+for ss =1: length(in_list_idx)
+    all_data(in_list_idx(ss)).validation = val_flag;
+end
+end
