@@ -5,7 +5,7 @@
 % subplot(1,3,3);imshow(maskedRGBImage);title('Filtered Image');
 % subplot(1,3,1);imshow(I);title('Original Image');
 
-function [BW,maskedRGBImage] = createMaskForRed(RGB) 
+function [BW,maskedRGBImage] = createMaskForRed(RGB, channel1Min, channel1Max)
     % Convert RGB image to HSV image
     I = rgb2hsv(RGB);
     % Define thresholds for 'Hue'. Modify these values to filter out different range of colors.
