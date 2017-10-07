@@ -67,7 +67,7 @@ gt_dir  = fullfile(data_dir,'gt');
 all_gt_file = dir(fullfile(gt_dir,'*.txt'));
 all_gt_file = {all_gt_file.name};
 % data tamplate struct - to save each shape
-data_tamplate = struct('file_id','','type','','A',0,'form_factor',0, 'fill_factor',0,'color_wrbk',false(1,4),'shape','','index',0);
+data_tamplate = struct('file_id','','type','','A',0,'form_factor',0, 'fill_factor',0,'color_wrbk',false(1,4),'shape','','index',0,'validation',0);
 all_data = data_tamplate;
 valid_i = 0;
 

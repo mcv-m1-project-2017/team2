@@ -1,3 +1,17 @@
+<<<<<<< HEAD
+%
+% Evaluate colour segmentation
+%
+function [] = evaluate_segmentation(all_data)
+
+    
+    if strcmp(colour, 'blue')
+        createMaskForBlue
+    elseif strcmp(colour, 'red')
+        createMaskForRed
+    end
+end
+=======
 function [ TP,TN,FP,FN ] = evaluate_segmentation( mask,clr,ground_truth,file_id, all_data )
 % evaluate_segmentation 
 %   this function evaluate the quality of the
@@ -97,3 +111,4 @@ FN = sum(FN(:));
 
 end
 
+>>>>>>> 04f1e42cbc1ab8b49c942366b88dd882d14e8f46
