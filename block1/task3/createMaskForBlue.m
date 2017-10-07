@@ -10,10 +10,6 @@ function [BW,maskedRGBImage] = createMaskForBlue(RGB, channel1Min, channel1Max)
     I = rgb2hsv(RGB);
     % Define thresholds for 'Hue'. Modify these values to filter out different range of colors.
 
-    %%%BLUE%%%%
-    channel1Min = 0.65;
-    channel1Max = 0.55;
-
     % Define thresholds for 'Saturation'
     channel2Min = 0;      % For BLUE 0
     channel2Max = 1;
