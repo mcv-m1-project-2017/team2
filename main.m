@@ -4,7 +4,7 @@ clear all
 
 addpath(genpath(fileparts(mfilename('fullpath'))));
 
-data_dir = 'C:\Users\Lorenzo\Documents\team2\train\train';
+data_dir = '..\train\train';
 plot_flag = 1;
 
 
