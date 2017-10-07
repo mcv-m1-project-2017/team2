@@ -19,7 +19,7 @@ plot_flag = 1;
 %TASK 3
 
 bluemax=0.55 ; bluemin= 0.65;
-redmax= 0.05; redmin= 0.9;
+redmax= 0.5; redmin= 0.9;
 
 [all_data] = task3(all_data, bluemin, bluemax, redmin, redmax);
 
