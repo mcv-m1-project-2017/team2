@@ -8,12 +8,7 @@
 
 clear all
 addpath(genpath(fileparts(mfilename('fullpath'))));
-<<<<<<< HEAD
 data_dir = 'train\train';
-=======
-
-data_dir = 'train/train';
->>>>>>> baadf6469653c42da086e4874df13a9e74a0083e
 plot_flag = 1;
 
 % TASK 1
@@ -27,15 +22,7 @@ bluemax=0.55 ; bluemin= 0.65;       % Threshold HUE values for blue and red retr
 redmax= 0.5; redmin= 0.9;           % after running tests on the training set.
 [all_data] = task3(all_data, bluemin, bluemax, redmin, redmax);
 
-<<<<<<< HEAD
 % TASK 4
 task4(all_data);
-=======
-
-%TASK 4
-
-task4 (all_data);
-
->>>>>>> baadf6469653c42da086e4874df13a9e74a0083e
 
 
