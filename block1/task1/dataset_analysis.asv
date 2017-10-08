@@ -72,28 +72,28 @@ all_data = data_tamplate;
 valid_i = 0;
 
 for ii =1:length(all_gt_file)
-    [tl,br,type,w,h] = text_interp(fullfile(gt_dir,all_gt_file{ii}));
+    [ tl,br,type,w,h ] = text_interp( fullfile(gt_dir,all_gt_file{ii}) );
     % If the file doesn't exist - continue
     if tl==-1
         continue
     end
     
     % loop on the number of patch(traffic signs) in the same file\mask
-    for jj =1:size(tl,1)
+    for jj =1: size(tl,1)
         id_file = strrep(all_gt_file{ii},'.txt','');
         id_file = strrep(id_file,'gt.','');
-        [mask_area, mask_index] = mask_interp(fullfile(mask_dir, ['mask.',id_file,'.png']), tl(jj,:), br(jj,:));
-        % If the file doesn't exist - continue
+        [ mask_area ,mask_index] = mask_interp( fullfile(mask_dir,['mask.',id_file,'.png'] ), tl(jj,:) , br(jj,:));
+        % if the file doesnt exist- continue
         if mask_area==-1
             continue
         end
         
         if mask_area==0
-            disp([id_file,' - is empty!']);
+            disp([id_file,'- is empty!']);
             continue
         end
-        % If there are : gt & mask
-        % classify them, according to their type
+        % If there are : gt & mast
+        % classify the, according to type
         %--------------------------------
         valid_i = valid_i+1;
         all_data(valid_i) = data_tamplate;
@@ -101,7 +101,7 @@ for ii =1:length(all_gt_file)
         all_data(valid_i).A = w(jj)*h(jj);
         %     all_data(valid_i).h = h(jj);
         all_data(valid_i).type = type(jj);
-        % Shape according to given legend
+        % shape according to given legend
         switch type(jj)
             case 'A'
                 all_data(valid_i).shape = shape_legend{1};%'up_tri';
@@ -112,7 +112,7 @@ for ii =1:length(all_gt_file)
             case {'F'}
                 all_data(valid_i).shape = shape_legend{4};%'cube';
         end
-        % Colour according to given legend
+        % color according to given legend
         % WHITE
         %-----
         if any(strcmpi( type(jj),{'A','B','C','D','F'}))
@@ -137,15 +137,15 @@ for ii =1:length(all_gt_file)
         all_data(valid_i).form_factor = w(jj)/h(jj);
         all_data(valid_i).fill_factor = mask_area/(w(jj)*h(jj));
         all_data(valid_i).index = mask_index;
-        % Adding shape and color according to ground
+        % adding shape and color according to ground
     end
 end
 
 
 
-% Statistics
-% ===========
-% I. basic - statistic
+% statistics
+%===========
+%I. basic - statistic
 % form_factor and fill factor are [min,max]
 statistic_table = struct('type','','number',0,'form_factor',[0,0],'fill_factor',[0,0],'A',[0,0]);
 
@@ -162,9 +162,9 @@ for ii = 1: length(type_legend)
     Type_number_str{ii} = [type_legend{ii},'- #',num2str(statistic_table(ii).number)];
     
 end
-% For Each shape
+% for Each shape
 % choosing the bin according to the absolute min-max
-% --------------------------------------------------
+%--------------------------------------------------
 n=10; % not enought data
 num_bin_form = linspace(min([statistic_table.form_factor]),max([statistic_table.form_factor]),n);%[0:0.1:1];
 % num_bin_fill = [0:0.1:1];
