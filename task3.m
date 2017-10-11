@@ -30,8 +30,9 @@ function [all_image_data] = task3(all_data, bluemin, bluemax, redmin, redmax,dat
 
     % Loop on all the Images
     %=======================
-    for ii = 1:size({all_image_data.file_id},2)
-        im_full_path = strcat('train\train\', all_data(ii).file_id,'.jpg');
+    test_files_names = dir('test');
+    for ii = 3:size(test_files_names)
+        im_full_path = test_files_names(ii).name;
 
         % Red mask
         [BW_red,~] = createMaskForRed(imread(im_full_path), redmin, redmax);
@@ -43,7 +44,9 @@ function [all_image_data] = task3(all_data, bluemin, bluemax, redmin, redmax,dat
         % Merge - the 2 maskes
         BW = BW_red|BW_blue;
         
-        imwrite(BW,strcat('block1\task3\masks\',all_image_data(ii).file_id, '_mask.png'));
+        writing_path = strcat('block1\task3\masks_test\',test_files_names(ii).name(1:end-4),'.png');
+        disp(writing_path);
+        imwrite(BW, writing_path);
 
     end
     toc
