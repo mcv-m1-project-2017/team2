@@ -40,7 +40,7 @@ maxLine = max(line);
 minCol = min(col);
 maxCol = max(col);
 
-Out_Im = Im(minLine:maxLine,minCol:maxCol,:);
+Out_Im = double(Im(minLine:maxLine,minCol:maxCol,:));
 Im_mask = Im_mask(minLine:maxLine,minCol:maxCol);
 % increase the number of diminesion to match the RGB image
 Im_mask = repmat(Im_mask,1,1,3);
