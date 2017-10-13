@@ -32,7 +32,7 @@ masks= cell(1,nmasks);
 %initialize masks cell
 
 for n = 1:nmasks
-    masks{1,n} = imread([filenames(n).name]);
+    masks{1,n} = imfill(imread([filenames(n).name]),'holes');
 end
 
 
