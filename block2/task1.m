@@ -6,7 +6,7 @@ masks_bothat=masks;masks_open2=masks;masks_close2=masks;masks_tophat2=masks;mask
 
 diff=repmat(struct('open',[],'close',[],'tophat',[],'bothat',[]),[length(masks),1]);
 
-for n = 1:length(masks);
+for n = 1:length(masks)
     
     masks_erode{1,n} = imerode(masks{1,n},se);
     masks_dilate{1,n} = imdilate(masks{1,n},se);
