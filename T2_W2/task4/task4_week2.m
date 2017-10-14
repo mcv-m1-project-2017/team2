@@ -26,11 +26,11 @@ Im = rgb2hsv(ImRGB_wb);
  imshow(ImRGB_wb);
  title('WB');
    subplot(2,2,2);
- imshow(IB);
+ imshow(IB,[min(IB(:)),max(IB(:))]);
  colorbar
  title('Blue probability map');
   subplot(2,2,4);
- imshow(IR);
+ imshow(IR,[min(IR(:)),max(IR(:))]);
  colorbar
  title ('red probability map');
  
@@ -50,11 +50,11 @@ Im = rgb2hsv(ImRGB_wb);
  imshow(ImRGB_wb);
  title('WB');
    subplot(2,2,2);
- imshow(IB2,[0,max(IB2(:))]);
+ imshow(IB2,[min(IB2(:)),max(IB2(:))]);
  colorbar
  title('Blue probability map');
   subplot(2,2,4);
- imshow(IR2,[0,max(IR2(:))]);
+ imshow(IR2,[min(IR2(:)),max(IR2(:))]);
  colorbar
  title ('red probability map');
  
