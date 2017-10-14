@@ -1,4 +1,4 @@
-function [ diff ] = task1( masks , se , plots)
+function [diff] = task1(masks, se, plots)
 
 masks_erode=masks;masks_dilate=masks;masks_open=masks;masks_close=masks;masks_tophat=masks;
 masks_bothat=masks;masks_open2=masks;masks_close2=masks;masks_tophat2=masks;masks_bothat2=masks;

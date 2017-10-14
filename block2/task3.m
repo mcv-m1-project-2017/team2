@@ -1,4 +1,4 @@
-function [masks_improved] = task3(masks,se,plots)
+function [masks_improved] = task3(masks, se, plots)
 
 masks_filled = cell(length(se),length(masks));
 masks_erode = cell(length(se),length(masks));

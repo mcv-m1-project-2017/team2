@@ -1,4 +1,4 @@
-function [ diff2, time ] = task2( masks, se, plots )
+function [diff2, time] = task2(masks, se, plots)
 
 mask = masks{1,floor(rand(1)*length(masks))+1}; %select a mask randomly
 
