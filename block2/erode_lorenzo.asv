@@ -13,7 +13,7 @@ function [mask_copy] = erode_lorenzo(mask, se)
     % This matrix will contain the coordinates relative to the centre of
     % se for non-zero entries
     [r_rel,c_rel] = find(se_matrix);
-    coordinates = zeros(length(r_rel),2);
+    coordinates = zeros(r,2);
     
     for i=1:length(r_rel)
         coordinates(i,1) = r_rel(i)-centre(1);
