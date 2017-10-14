@@ -59,8 +59,8 @@ function [mask_copy] = erode_lorenzo(mask, se)
     %subplot(3,1,3);imshow(imerode(mask, se));title('Matlabs erode');
     
     difference = mask_copy-imerode(mask, se);
-    %figure;
-    %imshow(difference);title('Difference');
+    figure;
+    imshow(difference);title('Difference');
     disp(nnz(difference));                  % Display number of non-zero elements in the difference. If 0, the two images are the same
 
 end
