@@ -1,16 +1,16 @@
-function [ diff2, time ] = task2T( masks, se, plots )
+function [diff2, time] = task2(masks, se, plots)
 
 mask = masks{1,floor(rand(1)*length(masks))+1}; %select a mask randomly
 
-diff2=repmat(struct('erode',[],'dilate',[]),[length(se),1]); %diff is the difference between the results
+diff2=repmat(struct('erode',[],'dilate',[]),[le\ngth(se),1]); %diff is the difference between the results
 %of imdilate/mydilate and imerode/myerode 
 
 for ii=1:length(se)
     
     mask_erode = imerode(mask, se{1,ii});
     mask_dilate = imdilate(mask, se{1,ii});
-    mymask_erode = myerode(mask, se{1,ii});
-    mymask_dilate = mydilate2(mask, se{1,ii});
+    mymask_erode = erode_lorenzo(mask, se{1,ii});
+    mymask_dilate = dilate_lorenzo(mask, se{1,ii});
     
     diff2(ii).erode = mean(mean(mymask_erode - mask_erode));
     diff2(ii).dilate = mean(mean(mymask_dilate - mask_dilate));
@@ -34,11 +34,11 @@ tic
 imdilate(mask, se{1,ii});
 time(1).dilate = toc;
 tic
-myerode(mask, se{1,ii});
-time(1).myerode = toc;
+erode_lorenzo(mask, se{1,ii});
+time(1).erode_lorenzo = toc;
 tic
-mydilate2(mask, se{1,ii});
-time(1).mydilate2 = toc;
+dilate_lorenzo(mask, se{1,ii});
+time(1).dilate_lorenzo = toc;
 
 end
 

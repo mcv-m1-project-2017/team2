@@ -68,8 +68,8 @@ display('difference between the MO and the same MO composed from dilation/erosio
 % TASK 2:   Measure the computational efficiency of your programed operators Erosion/Dilation
 
 form = {'square'};%{'square','square','square'};    % we apply two types of struct element forms to simplify: 'circle' or 'square'
-thickness = 1;%[9,15,5];                 % wide of the struct element. We can compute an array of se to compare it.
-plots = 'yes';
+thickness = 5;%[9,15,5];                 % wide of the struct element. We can compute an array of se to compare it.
+plots = 'no';
 
 %we can put more than one se to compare it, but it really doesn't change
 %the results or the computational efficiency.
@@ -91,7 +91,7 @@ for ii=1:length(se)
 end
 
 
-[diff2, time] = task2T(masks,se,plots);
+[diff2, time] = task2(masks,se,plots);
 
 diff_table2 = struct2table(diff2);
 time_table2 = struct2table(time);
@@ -114,7 +114,7 @@ display('operation time of the MO');
 %---------------------------------------------------------------------------------------------------
 % TASK 3:   Use operators to improve results in sign detection
 
-form = {'square','square'};%{'square','square','square'};    
+form = {'square','square'};%{'square','square','square'};
 thickness = [9,5];%[9,15,5];
 plots = 'yes';
 

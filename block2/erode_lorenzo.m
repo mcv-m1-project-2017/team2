@@ -1,18 +1,19 @@
 %
-% Calculate the sparse matrix of a mask image and for each non-zero entry
+% Find the non-zero entry of a mask image and for each one of them
 % check if any of its neighbours (found through a structuring element) is
 % zero. If it is, the pixel is eroded.
 %
 
 function [mask_copy] = erode_lorenzo(mask, se)
     
-    se_matrix = se.getnhood();
+    se_matrix = se;
     [r,c] = size(se_matrix);
-    centre = [ceil(r/2),ceil(c/2)];
+    centre = [ceil(r/2),ceil(c/2)];         % Coordinates of the centre of se
+    [r_rel,c_rel] = find(se_matrix);        % Coordinates of non-zero entries in se
     
     % This matrix will contain the coordinates relative to the centre of
-    % se for non-zero entries
-    [r_rel,c_rel] = find(se_matrix);
+    % se for non-zero entries. They will be used when finding the
+    % coordinates of the neighbours of each non-zero entry of the mask.
     coordinates = zeros(length(r_rel),2);
     
     for i=1:length(r_rel)
@@ -52,14 +53,14 @@ function [mask_copy] = erode_lorenzo(mask, se)
         end
     end
     
-    figure;
-    subplot(3,1,1);imshow(mask);title('Original Mask');
-    subplot(3,1,2);imshow(mask_copy);title('erode Lorenzo');
-    subplot(3,1,3);imshow(imerode(mask, se));title('Matlabs erode');
+    %figure;
+    %subplot(3,1,1);imshow(mask);title('Original Mask');
+    %subplot(3,1,2);imshow(mask_copy);title('erode Lorenzo');
+    %subplot(3,1,3);imshow(imerode(mask, se));title('Matlabs erode');
     
     difference = mask_copy-imerode(mask, se);
-    figure;
-    imshow(difference);title('Difference');
+    %figure;
+    %imshow(difference);title('Difference');
     disp(nnz(difference));                  % Display number of non-zero elements in the difference. If 0, the two images are the same
 
 end
