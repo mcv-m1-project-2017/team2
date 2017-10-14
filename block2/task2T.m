@@ -37,8 +37,8 @@ tic
 myerode(mask, se{1,ii});
 time(1).myerode = toc;
 tic
-mydilate(mask, se{1,ii});
-time(1).mydilate = toc;
+mydilate2(mask, se{1,ii});
+time(1).mydilate2 = toc;
 
 end
 

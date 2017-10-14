@@ -12,7 +12,7 @@ end
 %=========
 % 1. tl ( top-left, [line,col])
 % 2. br ( buttom-right, [line,col])
-% 3. type (A/B/C/D/E/F/G/H)
+% 3. type (A/B/C/D/E/F)
 % 4. w = width (column diffrence)
 % 5. h = height (lines diffrence)
 

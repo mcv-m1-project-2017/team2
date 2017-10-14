@@ -1,6 +1,6 @@
 function [masks_improved] = task3(masks,se,plots)
 
-
+masks_filled = cell(length(se),length(masks));
 masks_erode = cell(length(se),length(masks));
 masks_improved = cell(length(se),length(masks));
 
@@ -10,7 +10,8 @@ for n = 1:length(masks)
     
     for ii=1:length(se)
         
-        masks_erode{ii,n}=imerode(masks{1,n},se{1,ii});
+        masks_filled{ii,n} = imfill(masks{1,n},'holes');
+        masks_erode{ii,n}=imerode(masks_filled{1,n},se{1,ii});
         
         %erode the mask with the different "brushes"
         
