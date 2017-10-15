@@ -6,7 +6,7 @@ masks_bothat=masks;masks_open2=masks;masks_close2=masks;masks_tophat2=masks;mask
 
 diff=repmat(struct('open',[],'close',[],'tophat',[],'bothat',[]),[length(masks),1]);
 
-for n = 1:length(masks);
+for n = 1:length(masks)
     
     masks_erode{1,n} = imerode(masks{1,n},se);
     masks_dilate{1,n} = imdilate(masks{1,n},se);
@@ -18,17 +18,17 @@ for n = 1:length(masks);
     
     %create the different morphological operators using dilate and erosion
     
-    masks_open2{1,n} = dilate_lorenzo(erode_lorenzo(masks{1,n},se),se);               %open = erode then dilate
-    masks_close2{1,n} = erode_lorenzo(dilate_lorenzo(masks{1,n},se),se);              %close = dilate then erode
-    masks_tophat2{1,n} = masks{1,n}-dilate_lorenzo(erode_lorenzo(masks{1,n},se),se);  %tophat = erode then dilate then substract it from the mask
-    masks_bothat2{1,n} = erode_lorenzo(dilate_lorenzo(masks{1,n},se),se)-masks{1,n};  %bothat = dilate then erode then substract the mask from it
+    masks_open2{1,n} = imdilate(imerode(masks{1,n},se),se);               %open = erode then dilate
+    masks_close2{1,n} = imerode(imdilate(masks{1,n},se),se);              %close = dilate then erode
+    masks_tophat2{1,n} = masks{1,n}-imdilate(imerode(masks{1,n},se),se);  %tophat = erode then dilate then substract it from the mask
+    masks_bothat2{1,n} = imerode(imdilate(masks{1,n},se),se)-masks{1,n};  %bothat = dilate then erode then substract the mask from it
     
     %compute the difference between them
-%     diff(n).open = mean(mean(masks_open{1,n} - masks_open2{1,n}));
-    diff(n).open = sum(sum(abs(masks_open{1,n} - masks_open2{1,n})));
-    diff(n).close = sum(sum(abs(masks_close{1,n} - masks_close2{1,n})));
-    diff(n).tophat = sum(sum(abs(masks_tophat{1,n} - masks_tophat2{1,n})));
-    diff(n).bothat = sum(sum(abs(masks_bothat{1,n} - masks_bothat2{1,n})));
+    
+    diff(n).open = mean(mean(masks_open{1,n} - masks_open2{1,n}));
+    diff(n).close = mean(mean(masks_close{1,n} - masks_close2{1,n}));
+    diff(n).tophat = mean(mean(masks_tophat{1,n} - masks_tophat2{1,n}));
+    diff(n).bothat = mean(mean(masks_bothat{1,n} - masks_bothat2{1,n}));
     
     %plot the results
     
@@ -41,15 +41,15 @@ for n = 1:length(masks);
         
         figure('Name',['mask ' num2str(n)],'NumberTitle','off');
         subplot(2,5,1);imshow(masks{1,n});title('mask');
-        subplot(2,5,2);imshow(masks_open{1,n});title('open provided');
-        subplot(2,5,3);imshow(masks_close{1,n});title('close provided');
-        subplot(2,5,4);imshow(masks_tophat{1,n});title('tophat provided');
-        subplot(2,5,5);imshow(masks_bothat{1,n});title('bothat provided');
+        subplot(2,5,2);imshow(masks_open{1,n});title('open');
+        subplot(2,5,3);imshow(masks_close{1,n});title('close');
+        subplot(2,5,4);imshow(masks_tophat{1,n});title('tophat');
+        subplot(2,5,5);imshow(masks_bothat{1,n});title('bothat');
         subplot(2,5,6);imshow(masks{1,n});title('mask');
-        subplot(2,5,7);imshow(masks_open2{1,n});title('My open');
-        subplot(2,5,8);imshow(masks_close2{1,n});title('My close');
-        subplot(2,5,9);imshow(masks_tophat2{1,n});title('My Tophat');
-        subplot(2,5,10);imshow(masks_bothat2{1,n});title('My Bothat');
+        subplot(2,5,7);imshow(masks_open2{1,n});title('open2');
+        subplot(2,5,8);imshow(masks_close2{1,n});title('close2');
+        subplot(2,5,9);imshow(masks_tophat2{1,n});title('tophat2');
+        subplot(2,5,10);imshow(masks_bothat2{1,n});title('bothat2');
     end
     
 end
