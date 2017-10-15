@@ -28,7 +28,7 @@ end
 xlabel('Re-call');
 ylabel('precision');
 
-test_image = 'C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK1\task2\Training_2017\train\Images\01.001466.jpg'
+test_image = 'C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK1\task2\Training_2017\train\Images\01.001466.jpg';
 ImRGB = imread(test_image);
 [ ImRGB_wb ] = simple_WB( ImRGB );
 Im = rgb2hsv(ImRGB_wb);
@@ -60,11 +60,11 @@ Im = rgb2hsv(ImRGB_wb);
   [ IBC2 ] = backprojection_prob( B_crcb,Im(:,:,2:3) );
  [ IBL2 ] = backprojection_prob(B_y,Im(:,:,1) );
 IB2 = IBC2.*IBL2;
-
+IB2 = IB2./max(IB2(:));
  [ IRC2 ] = backprojection_prob( R_crcb,Im(:,:,2:3) );
  [ IRL2 ] = backprojection_prob(R_y,Im(:,:,1) );
  IR2 = IRC2.*IRL2; 
-
+IR2 = IR2./max(IR2(:));
   figure
  subplot(2,2,1);
  imshow(ImRGB);

@@ -151,29 +151,29 @@ step = 5;
 ce3 = [0:step:255]';
 ce4 = [0:1:255]';
 LRGrp = hist(double(All_pix_red_ycbcr(:,1)),ce4);
-LRGrp = LRGrp./sum(LRGrp(:));
+LRGrp = LRGrp./max(LRGrp(:));
 RGrp = hist3(double(All_pix_red_ycbcr(:,2:3)),{ce3,ce3});
-RGrp = RGrp./sum(RGrp(:));
+RGrp = RGrp./max(RGrp(:));
 LBGrp = hist(double(All_pix_blue_ycbcr(:,1)),ce4);
-LBGrp = LBGrp./sum(LBGrp(:));
+LBGrp = LBGrp./max(LBGrp(:));
 BGrp = hist3(double(All_pix_blue_ycbcr(:,2:3)),{ce3,ce3});
-BGrp = BGrp./sum(BGrp(:));
+BGrp = BGrp./max(BGrp(:));
 LMixGrp= hist(double(All_pix_redblue_ycbcr(:,1)),ce4);
-LMixGrp = LMixGrp./sum(LMixGrp(:));
+LMixGrp = LMixGrp./max(LMixGrp(:));
 MixGrp = hist3(double(All_pix_redblue_ycbcr(:,2:3)),{ce3,ce3});
-MixGrp = MixGrp./sum(MixGrp(:));
+MixGrp = MixGrp./max(MixGrp(:));
 
 R = RGrp.*MixGrp;
-R = R./sum(R(:));
+R = R./max(R(:));
 
 B = BGrp.*MixGrp;
-B = B./sum(B(:));
+B = B./max(B(:));
 
 RL = LRGrp.*LMixGrp;
-RL = RL./sum(RL(:));
+RL = RL./max(RL(:));
 
 BL = LBGrp.*LMixGrp;
-BL = BL./sum(BL(:));
+BL = BL./max(BL(:));
 
 if plot_flag
     [xq,yq] = meshgrid(min(ce3):1:max(ce3));
