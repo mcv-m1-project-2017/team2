@@ -23,9 +23,7 @@ redmax= [0.05:0.02:0.3]; redmin= [0.8:0.02:0.96];           % after running test
 imagedir_path = 'C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK2\train';
 given_mask_path = 'C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK2\train\mask';
 count = 0;
-% White balance before threshold
-wb_flag = true;
-
+wb_flag = true
 for ii = 1: length(bluemax)
     for jj = 1: length(bluemin)
         for kk = 1: length(redmax)

@@ -32,8 +32,8 @@ for ii = 1: length(bluemax)
             for ss = 1: length(redmin)
                 count = count+1;
                 
-                outdir = ['C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK1\test4bestThreshold\test',num2str(count)];
-                [all_image] = W1_task3(all_data, bluemin(jj), bluemax(ii), redmin(ss), redmax(kk),imagedir_path,outdir);
+                outdir = ['C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK1\test4bestThresholdWB\test',num2str(count)];
+                [all_image] = W1_task3(all_data, bluemin(jj), bluemax(ii), redmin(ss), redmax(kk),imagedir_path,outdir,wb_flag);
                 
                 % TASK 4
                 tmp = W1_task4(all_image,outdir,given_mask_path);
@@ -48,4 +48,4 @@ for ii = 1: length(bluemax)
     end
 end
 
-save([imagedir_path,'\results_without_WB.mat'],'results')
+save([imagedir_path,'\results_with_WB.mat'],'results')
