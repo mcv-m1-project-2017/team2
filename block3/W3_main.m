@@ -5,7 +5,7 @@
 
 %---------------------------------------------------------------------------------------------------
 %---------------------------------------------------------------------------------------------------
-%                       M1 BLOCK 3: ??????????????????????????????????????
+%                       M1 BLOCK 3: Simple region-based detection
 %---------------------------------------------------------------------------------------------------
 %---------------------------------------------------------------------------------------------------
 
@@ -16,60 +16,53 @@
 %---------------------------------------------------------------------------------------------------
 % Initialization and necessary data
 
-clear all;close all;
+clear all;
+close all;
+
 addpath(genpath(fileparts(mfilename('fullpath'))));
 
-image_folder = fullfile(fileparts(mfilename('fullpath')),'masks');
+image_folder = 'C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK1\task2\Training_2017\train\train';
 %folder where the masks are
+mask_folder = 'C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK1\task2\Training_2017\train\mask'; 
 
 filenames = dir(fullfile(image_folder, '*.png'));
 %read all images with specified extention, its png in our case
 
-nmasks = numel(filenames);
-%count total number of photos present in that folder
-
-masks= cell(1,nmasks);
-%initialize masks cell
-
-for n = 1:nmasks
-    masks{1,n} = imfill(imread([filenames(n).name]),'holes');
-end
-% 
-% 
 % %---------------------------------------------------------------------------------------------------
-% % TASK 1:   ??????
-
-
-
+% % TASK 1: Connected Component Labeling (CCL)
+% %------------------------------------------------
 
 [] = W3_task1(   );
 
 
-
-% 
-% 
 % %---------------------------------------------------------------------------------------------------
-% % TASK 2:   Measure the computational efficiency of your programed operators Erosion/Dilation
+% % TASK 2: Sliding window/  Multiple detections
+% %------------------------------------------------
+
 
 
 [] = W3_task2();
 
-%NOTE: it takes a looong time to do myerode or my dilate (mydilate less time
-%because there's less one's in the mask) so we have to optimie it in some
-%way
 
-% 
-% 
-% 
-% 
-% 
+
 % %---------------------------------------------------------------------------------------------------
-% % TASK 3:   Use operators to improve results in sign detection
+% % TASK 3:   Improve efficiency of feature computation using the integral image
+% %------------------------------------------------------------------------
  
 
 [] =W3_task3();
 
+% %---------------------------------------------------------------------------------------------------
+% % TASK 4:   Region-based evaluation
+% %------------------------------------------------------------------------
+[] =W3_task4();
 
+
+% %---------------------------------------------------------------------------------------------------
+% % TASK 5:   Improve efficiency of feature computation using convolutions
+% %           Compare with integral image approach
+% %------------------------------------------------------------------------
+[] =W3_task5();
 
 %CONCLUSIONS:
 

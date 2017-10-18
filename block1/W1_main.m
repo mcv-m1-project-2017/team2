@@ -48,4 +48,4 @@ for ii = 1: length(bluemax)
     end
 end
 
-save([imagedir_path,'\results_without_WB.mat'],'results')
+save([imagedir_path,'\results_without_WB.mat'],'results');
