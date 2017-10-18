@@ -1,3 +1,4 @@
+*.asv
 test
 train
 block1/task1/results
