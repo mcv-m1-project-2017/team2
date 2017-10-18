@@ -107,9 +107,9 @@ function ROC_data = roc_curve(thres,Sensi,Speci,Accuracy,Recall)
 subplot(1,2,1)
         fill_color = [11/255, 208/255, 217/255];
         fill([1-Speci(:,1); 1], [Sensi(:,1); 0], fill_color,'FaceAlpha',0.5);
-        hold on; plot(Speci(:,1), Sensi(:,1), '-b', 'LineWidth', 2);
-        hold on; plot(Speci(opt1,1), Sensi(opt1,1), 'or', 'MarkerSize', 10);
-        hold on; plot(Speci(opt1,1), Sensi(opt1,1), 'xr', 'MarkerSize', 12);
+        hold on; plot(1-Speci(:,1), Sensi(:,1), '-b', 'LineWidth', 2);
+        hold on; plot(1-Speci(opt1,1), Sensi(opt1,1), 'or', 'MarkerSize', 10);
+        hold on; plot(1-Speci(opt1,1), Sensi(opt1,1), 'xr', 'MarkerSize', 12);
         hold off; axis square; grid on; xlabel('1 - specificity'); ylabel('sensibility');
         title(['AROC = ' num2str(param.AROC)]);
 

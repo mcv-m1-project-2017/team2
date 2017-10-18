@@ -20,7 +20,7 @@ plot_flag = 1;
 % TASK 3
 bluemax=0.66;%[0.5:0.02:0.6] ; 
 bluemin= 0.55%[0.6:0.02:0.7];       % Threshold HUE values for blue and red retrieved
-redmax= [0.05:0.02:0.5]; redmin= 0.92;%[0.85:0.03:0.96];           % after running tests on the training set.
+redmax= [0.05:0.03:0.5]; redmin= 0.9;%[0.85:0.03:0.96];           % after running tests on the training set.
 imagedir_path = 'C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK2\train';
 given_mask_path = 'C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK2\train\mask';
 count = 0;

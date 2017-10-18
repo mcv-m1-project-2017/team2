@@ -37,7 +37,7 @@ if test_flag
     out_struct = [];
 else
     % Only validation images
-    % all_data = all_data([all_data.validation]==1);
+     all_data = all_data([all_data.validation]==1);
     
     % Only training images
     % all_data = all_data([all_data.validation]==0);
@@ -65,7 +65,7 @@ for ii = 1:length(all_image_data)
     
     % Blue mask
     [BW_blue,~] = createMaskForBlue(Im, bluemin, bluemax);
-    BW_blue = (~BW_blue);
+%     BW_blue = (~BW_blue);
     
     % Merge - the 2 maskes
     BW = BW_red|BW_blue;
