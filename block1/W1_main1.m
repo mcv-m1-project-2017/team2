@@ -8,7 +8,7 @@
 
 clear all
 addpath(genpath(fileparts(mfilename('fullpath'))));
-data_dir = 'C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK2\train';
+data_dir = '..\train';
 plot_flag = 1;
 
 % TASK 1

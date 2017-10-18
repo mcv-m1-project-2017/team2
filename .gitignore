@@ -3,4 +3,5 @@ train
 block1/task1/results
 block1/task3/masks
 block1/task3/masks_test
-block2/slides
+block2/masks
+block2/images
