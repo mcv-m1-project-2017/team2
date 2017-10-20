@@ -18,34 +18,27 @@ plot_flag = 1;
 [all_data] = split_data(statistic_table,all_data);
 
 % TASK 3
-bluemax=[0.5:0.02:0.6] ; bluemin= [0.6:0.02:0.7];       % Threshold HUE values for blue and red retrieved
-redmax= [0.05:0.02:0.3]; redmin= [0.8:0.02:0.96];           % after running tests on the training set.
-imagedir_path = 'C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK2\train';
-given_mask_path = 'C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK2\train\mask';
+bluemax=0.65 ; bluemin= 0.55;       % Threshold HUE values for blue and red retrieved
+redmax= 0.5; redmin= 0.9;           % after running tests on the training set.
+
+imagedir_path = '..\train\train';
+given_mask_path = '..\train\mask';
 count = 0;
 % White balance before threshold
 wb_flag = true;
 
-for ii = 1: length(bluemax)
-    for jj = 1: length(bluemin)
-        for kk = 1: length(redmax)
-            for ss = 1: length(redmin)
-                count = count+1;
-                
-                outdir = ['C:\Users\noamor\Google Drive\UPC_M1\Project\M1_BLOCK1\test4bestThresholdWB\test',num2str(count)];
-                [all_image] = W1_task3(all_data, bluemin(jj), bluemax(ii), redmin(ss), redmax(kk),imagedir_path,outdir,wb_flag);
-                
-                % TASK 4
-                tmp = W1_task4(all_image,outdir,given_mask_path);
-                tmp.bluemin = bluemin(jj);
-                tmp.bluemax = bluemax(ii);
-                tmp.redmin = redmin(ss);
-                tmp.redmax = redmax(kk);
-                results{count} = tmp;
-                
-            end
-        end
-    end
-end
+             
+outdir = ['..\test4bestThresholdWB\test',num2str(count)];
+[all_image] = W1_task3(all_data, bluemin, bluemax, redmin, redmax,imagedir_path,outdir,wb_flag);
 
-save([imagedir_path,'\results_with_WB.mat'],'results')
+% TASK 4
+tmp = W1_task4(all_image,outdir,given_mask_path);
+tmp.bluemin = bluemin;
+tmp.bluemax = bluemax;
+tmp.redmin = redmin;
+tmp.redmax = redmax;
+results{1} = tmp;
+                
+
+
+save([imagedir_path,'\results_with_WB.mat'],'tmp')
