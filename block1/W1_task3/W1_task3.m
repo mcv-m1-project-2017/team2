@@ -16,7 +16,7 @@ end
 % Output folder to save the mask
 % the default folder location if there is no input
 if nargin<6
-    out_dir = fullfile(pwd,'W1_task3\masks');
+    out_dir = fullfile(pwd,'\masks');
 end
 if ~isdir(out_dir)
     mkdir(out_dir);
@@ -60,6 +60,25 @@ for ii = 1:length(all_image_data)
     if wb_flag
         [ Im ] = simple_WB( Im );
     end
+    
+    %%
+    outputImag=Im;
+    r=outputImag(:,:,1);
+    g=outputImag(:,:,2);
+    b=outputImag(:,:,3);
+
+
+    extra_blue = max(b-max(r,g),0);
+    imRGB_B = im2bw(extra_blue,0.1);
+%     figure
+%     imshow(imRGB_B);
+
+    extra_red = max(r-max(b,g),0);
+    imRGB_R = im2bw(extra_red,0.1);
+%     figure
+%     imshow(imRGB_R);
+     
+    %%
     % Red mask
     [BW_red,~] = createMaskForRed(Im, redmin, redmax);
     
@@ -68,12 +87,21 @@ for ii = 1:length(all_image_data)
 %     BW_blue = (~BW_blue);
     
     % Merge - the 2 maskes
-    BW = BW_red|BW_blue;
-    
-    writing_path = strcat(out_dir,'\',all_image_data{ii}(1:end-4),'_mask.png');
+%     BW = BW_red|BW_blue;
+    %%
+    redMask= and(imRGB_R,BW_red);
+    blueMask= and(imRGB_B,BW_blue);
+    BW = redMask|blueMask;
+
+    %%
+    writing_path = strcat(out_dir,'\',all_image_data{ii}(1:end-4),'_maskFinal.png');
     %disp(writing_path);
     imwrite(BW, writing_path);
     
+%     writing_path = strcat(out_dir,'\',all_image_data{ii}(1:end-4),'_maskB.png');
+%     %disp(writing_path);
+%     imwrite(BW_blue, writing_path);
+%     
 end
 toc
 
