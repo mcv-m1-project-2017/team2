@@ -1,6 +1,4 @@
 # team2
-Week 1:
-To run the code run main.m file.
 
-Week 2:
-To run the code run /block2/main.m file
+To run every week's code cd into the corresponding block and run WX_main.m
+Also make sure that the two folders /test/ and /train/ have been filled with the right images.
