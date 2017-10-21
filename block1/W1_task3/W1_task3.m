@@ -1,20 +1,20 @@
 % This function generates merged masks for red and blue and saves the
 % results in /block1/task3/masks
 
-function [out_struct] = W1_task3(all_data, bluemin, bluemax, redmin, redmax,data_path, out_dir,wb_flag)
+function [out_struct] = W1_task3(all_data, bluemin, bluemax, redmin, redmax, data_path, out_dir, wb_flag)
 dbstop if error
-% preform WB on the imaegs before creating the masks
+% Perform WB on the images before creating the masks
 if nargin<7
     wb_flag = false;
 end
-% the folder that contains the images
-% the default option is the current folder
 
+% The folder that contains the images
+% The default option is the current folder
 if nargin<5
     data_path = pwd;
 end
 % Output folder to save the mask
-% the default folder location if there is no input
+% The default folder location if there is no input
 if nargin<6
     out_dir = fullfile(pwd,'\masks');
 end
@@ -22,22 +22,20 @@ if ~isdir(out_dir)
     mkdir(out_dir);
 end
 if isempty(all_data)
-    % there is no data list- with gold standart
-    % this function runs on the test images.
+    % There is no data list - with gold standart
+    % This function runs on the test images.
     test_flag = true;
 else
     test_flag = false;
 end
 
 
-% Uncomment line 19 or line 22 to generate masks only for the
-% validation dataset or only for the training dataset.
 if test_flag
     all_image_data = dir([data_path,'\*.jpg']);
     out_struct = [];
 else
     % Only validation images
-     all_data = all_data([all_data.validation]==1);
+    % all_data = all_data([all_data.validation]==1);
     
     % Only training images
     % all_data = all_data([all_data.validation]==0);

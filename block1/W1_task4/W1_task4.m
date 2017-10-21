@@ -5,7 +5,7 @@ function [out] = W1_task4 (all_data,our_mask_path,provided_mask_path)
     TN=0;
     
    for ii = 1:size({all_data.file_id},2)
-        maskResult = imread(strcat(our_mask_path,'\',all_data(ii).file_id, '_mask.png'));
+        maskResult = imread(strcat(our_mask_path,'\',all_data(ii).file_id, '_maskFinal.png'));
         maskProvided = imread(strcat(provided_mask_path,'\mask.',all_data(ii).file_id, '.png'));
             
         [pixelTP, pixelFP, pixelFN, pixelTN] = PerformanceAccumulationPixel(maskResult, maskProvided);
