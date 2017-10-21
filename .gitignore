@@ -2,7 +2,7 @@
 test
 train
 block1/task1/results
-block1/task3/masks
+block1/task3/masks/*.png
 block1/task3/masks_test
 block1/masks
 block1/test4bestThresholdWB/
