@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%           M1 BLOCK 3: Simple region-based detection			%
+%           M1 BLOCK 3: Simple region-based detection			 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -24,7 +24,7 @@ filenames = dir(fullfile(image_folder, '*.png'));
 size_min = 29;              % Figures collected from block1:
 size_max = 236;             % min_area = 899pixels, max_area = 55930pixels
 
-images_names = dir(image_folder);
+images_names = dir('masks');
 for i=4:length(images_names)
     image = strcat(images_names(i).folder,'\',images_names(i).name);
     [positive_bounding_boxes] = W3_task2(image, size_min, size_max);

@@ -14,17 +14,18 @@ img = imread(img_path);
 
 for side_length=[size_min, floor((size_min+size_max)/2), size_max]          % Three different sliding window sizes
     disp(side_length);
-    for y=[1:5:height]          % Slide vertically
-        
-        for x=[1:5:width]       % Slide horizontally
+    for y=[1:floor(side_length/3):height]          % Slide vertically
+        for x=[1:floor(side_length/3):width]       % Slide horizontally
             
-            bounding_box = imcrop(img,[x,x+side_length,y,y+side_length]);
+            bounding_box = imcrop(img,[x,y,side_length,side_length]);
+            %imshow(bounding_box);
             score = judge_sliding_window(bounding_box);
             
             if score > 0.80     % If the confidence is high, save the bounding box
                 positive_bounding_boxes(counter) = bounding_box;
                 counter = counter +1;
             end
+            
             
         end
     end
