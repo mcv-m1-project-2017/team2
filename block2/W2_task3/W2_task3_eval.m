@@ -3,15 +3,14 @@ function output= task3_eval (method)
     FP=0;
     FN=0; 
     TN=0;
-    folder = strcat('..\block2\task3\',method);
+    folder = strcat('W2_task3/',method);
 
     test_files_names = dir(folder);
 
-    for ii = 3:size(test_files_names)
+    for ii = 3:(size(test_files_names)-1)
         im_full_path = test_files_names(ii).name;
-        %disp(im_full_path);
-        maskResult = imread(strcat('..\block2\task3\m1\',im_full_path));
-        maskProvided = imread(strcat('train\train\mask\mask.',im_full_path));
+        maskResult = imread(strcat('W2_task3/',method,'/',im_full_path));
+        maskProvided = imread(strcat('../train/mask/mask.',im_full_path(1:9),'.png'));
 
         [pixelTP, pixelFP, pixelFN, pixelTN] = PerformanceAccumulationPixel(maskResult, maskProvided);
 

@@ -8,3 +8,9 @@ block1/masks
 block1/test4bestThresholdWB/
 block2/masks
 block2/images
+block2/W2_task3/m1/*.png
+block2/W2_task3/m2/*.png
+block2/W2_task3/m3/*.png
+block2/W2_task3/m4/*.png
+block2/W2_task3/m5/*.png
+block2/W2_task3/m6/*.png

@@ -60,9 +60,9 @@ display('difference between the MO and the same MO composed from dilation/erosio
 % %---------------------------------------------------------------------------------------------------
 % % TASK 2:   Measure the computational efficiency of your programed operators Erosion/Dilation
 
-form = {'square'};%{'square','square','square'};    % we apply two types of struct element forms to simplify: 'circle' or 'square'
-thickness = 5;%[9,15,5];                 % wide of the struct element. We can compute an array of se to compare it.
-plots = 'yes';
+form = {'square'};              % we apply two types of struct element forms to simplify: 'circle' or 'square'
+thickness = 25;                  % wide of the struct element. We can compute an array of se to compare it.
+plots = 'no';
 
 %we can put more than one se to compare it, but it really doesn't change
 %the results or the computational efficiency.
@@ -111,13 +111,12 @@ display('operation time of the MO');
 
 %Method 1: hole filling + opening
 tic
-test_files_names = dir('block2/masks_from_block1');
-for ii = 3:size(test_files_names)
+files_names = dir('../block1/masks');
+for ii = 3:(size(files_names)-1)
     
-    im_full_path = test_files_names(ii).name;
-    original_mask = imread(strcat('block2\masks_from_block1\',im_full_path));
-    writing_path = strcat('block2/task3/m1/',test_files_names(ii).name(1:end-4),'.png');
-    %disp(writing_path);
+    im_full_path = files_names(ii).name;
+    original_mask = imread(strcat('../block1/masks/',im_full_path));
+    writing_path = strcat('W2_task3/m1/',files_names(ii).name(1:end-4),'.png');
     new_mask = imfill(original_mask,'holes');
     new_mask = imopen(new_mask, se{1,1});
     imwrite(new_mask, writing_path);
@@ -128,14 +127,13 @@ toc
 W2_task3_eval('m1');
 
 %Method 2: hole filling + closing
-test_files_names = dir('block2/masks_from_block1');
+files_names = dir('../block1/masks');
 tic
-for ii = 3:size(test_files_names)
+for ii = 3:(size(files_names)-1)
     
-    im_full_path = test_files_names(ii).name;
-    original_mask = imread(strcat('block2\masks_from_block1\',im_full_path));
-    writing_path = strcat('block2/task3/m2/',test_files_names(ii).name(1:end-4),'.png');
-    %disp(writing_path);
+    im_full_path = files_names(ii).name;
+    original_mask = imread(strcat('../block1/masks/',im_full_path));
+    writing_path = strcat('W2_task3/m2/',files_names(ii).name(1:end-4),'.png');
     new_mask = imfill(original_mask,'holes');
     new_mask = imclose(new_mask, se{1,1});
     imwrite(new_mask, writing_path);
@@ -147,15 +145,13 @@ W2_task3_eval('m2');
 
 
 %Method 3: hole filling + erode
-test_files_names = dir('block2/masks_from_block1');
+files_names = dir('../block1/masks');
 tic
-for ii = 3:size(test_files_names)
+for ii = 3:(size(files_names)-1)
     
-    im_full_path = test_files_names(ii).name;
-    %disp(im_full_path);
-    original_mask = imread(strcat('block2\masks_from_block1\',im_full_path));
-    writing_path = strcat('block2/task3/m3/',test_files_names(ii).name(1:end-4),'.png');
-    %disp(writing_path);
+    im_full_path = files_names(ii).name;
+    original_mask = imread(strcat('../block1/masks/',im_full_path));
+    writing_path = strcat('W2_task3/m3/',files_names(ii).name(1:end-4),'.png');
     new_mask = imfill(original_mask,'holes');
     new_mask = imerode(new_mask, se{1,1});
     imwrite(new_mask, writing_path);
@@ -165,15 +161,15 @@ disp('M3:');
 toc
 W2_task3_eval('m3');
 
+%{
 %Method 4: opening
-test_files_names = dir('block2/masks_from_block1');
+files_names = dir('../block1/masks');
 tic
-for ii = 3:size(test_files_names)
+for ii = 3:(size(files_names)-1)
     
-    im_full_path = test_files_names(ii).name;
-    original_mask = imread(strcat('block2\masks_from_block1\',im_full_path));
-    writing_path = strcat('block2/task3/m4/',test_files_names(ii).name(1:end-4),'.png');
-    %disp(writing_path);
+    im_full_path = files_names(ii).name;
+    original_mask = imread(strcat('../block1/masks/',im_full_path));
+    writing_path = strcat('W2_task3/m4/',files_names(ii).name(1:end-4),'.png');
     new_mask = imopen(original_mask, se{1,1});
     imwrite(new_mask, writing_path);
 
@@ -183,14 +179,13 @@ toc
 W2_task3_eval('m4');
 
 %Method 5: closing
-test_files_names = dir('block2/masks_from_block1');
+files_names = dir('../block1/masks');
 tic
-for ii = 3:size(test_files_names)
+for ii = 3:(size(files_names)-1)
     
-    im_full_path = test_files_names(ii).name;
-    original_mask = imread(strcat('block2\masks_from_block1\',im_full_path));
-    writing_path = strcat('block2/task3/m5/',test_files_names(ii).name(1:end-4),'.png');
-    %disp(writing_path);
+    im_full_path = files_names(ii).name;
+    original_mask = imread(strcat('../block1/masks/',im_full_path));
+    writing_path = strcat('W2_task3/m5/',files_names(ii).name(1:end-4),'.png');
     new_mask = imclose(original_mask, se{1,1});
     imwrite(new_mask, writing_path);
 
@@ -200,16 +195,13 @@ toc
 W2_task3_eval('m5');
 
 %Method 6: erode
-test_files_names = dir('block2/masks_from_block1');
+files_names = dir('../block1/masks');
 tic
-for ii = 3:size(test_files_names)
+for ii = 3:(size(files_names)-1)
     
-    im_full_path = test_files_names(ii).name;
-    original_mask = imread(strcat('block2\masks_from_block1\',im_full_path));
-    %disp(im_full_path);
-    %imshow(original_mask);
-    writing_path = strcat('block2/task3/m6/',test_files_names(ii).name(1:end-4),'.png');
-    %disp(writing_path);
+    im_full_path = files_names(ii).name;
+    original_mask = imread(strcat('../block1/masks/',im_full_path));
+    writing_path = strcat('W2_task3/m6/',files_names(ii).name(1:end-4),'.png');
     new_mask = imerode(original_mask, se{1,1});
     imwrite(new_mask, writing_path);
 
@@ -217,6 +209,7 @@ end
 disp('M6:');
 toc
 W2_task3_eval('m6');
+%}
 
 
 %CONCLUSIONS:
