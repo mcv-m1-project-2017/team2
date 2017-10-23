@@ -18,7 +18,7 @@ plot_flag = 0;
 [all_data] = split_data(statistic_table,all_data);
 
 % TASK 3
-bluemax=0.65;   bluemin= 0.55;       % Threshold HUE values for blue and red retrieved
+bluemax=0.75;   bluemin= 0.5;       % Threshold HUE values for blue and red retrieved
 redmax= 0.1;    redmin= 0.9;         % after running tests on the training set.
 
 imagedir_path = '..\train';
@@ -28,7 +28,7 @@ count = 0;
 wb_flag = true;
 
              
-outdir = ['test4bestThresholdWB\test',num2str(count)];
+outdir = 'masks';
 [all_image] = W1_task3(all_data, bluemin, bluemax, redmin, redmax, imagedir_path, outdir, wb_flag);
 
 % TASK 4
