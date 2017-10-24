@@ -51,8 +51,8 @@ end
 
 diff_table = struct2table(diff);
 
-display(diff_table);
-display('difference between the MO and the same MO composed from dilation/erosion in all the different masks');
+% display(diff_table);
+% display('difference between the MO and the same MO composed from dilation/erosion in all the different masks');
 
 
 % 
@@ -60,8 +60,8 @@ display('difference between the MO and the same MO composed from dilation/erosio
 % %---------------------------------------------------------------------------------------------------
 % % TASK 2:   Measure the computational efficiency of your programed operators Erosion/Dilation
 
-form = {'square'};              % we apply two types of struct element forms to simplify: 'circle' or 'square'
-thickness = 25;                  % wide of the struct element. We can compute an array of se to compare it.
+form = {'circle'};              % we apply two types of struct element forms to simplify: 'circle' or 'square'
+thickness = 10;                  % wide of the struct element. We can compute an array of se to compare it.
 plots = 'no';
 
 %we can put more than one se to compare it, but it really doesn't change
@@ -88,19 +88,13 @@ end
 diff_table2 = struct2table(diff2);
 time_table2 = struct2table(time);
 
-display(diff_table2);
-display('difference between the imerode/imdilate and myerode/mydilate');
-display(time_table2);
-display('operation time of the MO');
+% display(diff_table2);
+% display('difference between the imerode/imdilate and myerode/mydilate');
+% display(time_table2);
+% display('operation time of the MO');
 
-%NOTE: it takes a looong time to do myerode or my dilate (mydilate less time
-%because there's less one's in the mask) so we have to optimie it in some
-%way
 
-% 
-% 
-% 
-% 
+%
 % 
 % %---------------------------------------------------------------------------------------------------
 % % TASK 3:   Use operators to improve results in sign detection
@@ -117,7 +111,8 @@ for ii = 3:(size(files_names)-1)
     im_full_path = files_names(ii).name;
     original_mask = imread(strcat('../block1/masks/',im_full_path));
     writing_path = strcat('W2_task3/m1/',files_names(ii).name(1:end-4),'.png');
-    new_mask = imfill(original_mask,'holes');
+    new_mask = imdilate(original_mask, strel('square',4));
+    new_mask = imfill(new_mask,'holes');
     new_mask = imopen(new_mask, se{1,1});
     imwrite(new_mask, writing_path);
 

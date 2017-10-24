@@ -18,14 +18,14 @@ plot_flag = 0;
 [all_data] = split_data(statistic_table,all_data);
 
 % TASK 3
-bluemax=0.75;   bluemin= 0.5;       % Threshold HUE values for blue and red retrieved
-redmax= 0.1;    redmin= 0.9;         % after running tests on the training set.
+bluemax=0.73;   bluemin= 0.5;       % Threshold HUE values for blue and red retrieved
+redmax= 0.13;    redmin= 0.9;         % after running tests on the training set.
 
 imagedir_path = '..\train';
 given_mask_path = '..\train\mask';
 count = 0;
 % White balance before threshold
-wb_flag = true;
+wb_flag = false;
 
              
 outdir = 'masks';
