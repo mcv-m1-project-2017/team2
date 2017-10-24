@@ -1,4 +1,4 @@
-function [ mask_area ,mask_index] = mask_interp( file_name , tl , br)
+function [ mask_area ,mass_center,mask_index] = mask_interp( file_name , tl , br)
 %text_interp extract the features in the txt file  
 % I. INPUT
 %==========
@@ -31,9 +31,14 @@ mask_index = median(Box(bBox));
 
 % calculate the Area of the shape
 mask_area = sum(bBox(:));
+mass_center = centerOfMass(bBox);
 if mask_area==0
-    figure;imshow(bBox,[0,1]);
-    figure; imshow(I,[0,1]);
+    figure;imshow(bBox,[0,1]); hold on
+    plot (mass_center(2),mass_center(1),'*r');
+    figure; imshow(I,[0,1]);hold on
+     plot (tl(2)+mass_center(2),tl(1)+mass_center(1),'*r');
 end
+mass_center = mass_center./size(bBox);
+% mass_center(1)
 end
 

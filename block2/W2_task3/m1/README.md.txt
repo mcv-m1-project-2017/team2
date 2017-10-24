@@ -1,1 +1,0 @@
-Mask results from Method 1

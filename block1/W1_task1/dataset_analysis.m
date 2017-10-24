@@ -67,7 +67,7 @@ gt_dir  = fullfile(data_dir,'gt');
 all_gt_file = dir(fullfile(gt_dir,'*.txt'));
 all_gt_file = {all_gt_file.name};
 % data template struct - to save each shape
-data_tamplate = struct('file_id','','type','','A',0,'form_factor',0, 'fill_factor',0,'color_wrbk',false(1,4),'shape','','index',0,'validation',0);
+data_tamplate = struct('file_id','','type','','A',0,'form_factor',0, 'fill_factor',0,'color_wrbk',false(1,4),'shape','','mass_center',[0,0],'index',0,'validation',0);
 all_data = data_tamplate;
 valid_i = 0;
 
@@ -82,7 +82,7 @@ for ii =1:length(all_gt_file)
     for jj =1:size(tl,1)
         id_file = strrep(all_gt_file{ii},'.txt','');
         id_file = strrep(id_file,'gt.','');
-        [mask_area, mask_index] = mask_interp(fullfile(mask_dir, ['mask.',id_file,'.png']), tl(jj,:), br(jj,:));
+        [mask_area, mass_center,mask_index] = mask_interp(fullfile(mask_dir, ['mask.',id_file,'.png']), tl(jj,:), br(jj,:));
         % If the file doesn't exist - continue
         if mask_area==-1
             continue
@@ -137,6 +137,7 @@ for ii =1:length(all_gt_file)
         all_data(valid_i).form_factor = w(jj)/h(jj);
         all_data(valid_i).fill_factor = mask_area/(w(jj)*h(jj));
         all_data(valid_i).index = mask_index;
+         all_data(valid_i).mass_center = mass_center;
         % Adding shape and color according to ground
     end
 end
@@ -147,7 +148,7 @@ end
 % ===========
 % I. basic - statistic
 % form_factor and fill factor are [min,max]
-statistic_table = struct('type','','number',0,'form_factor',[0,0],'fill_factor',[0,0],'A',[0,0]);
+statistic_table = struct('type','','number',0,'form_factor',[0,0],'fill_factor',[0,0],'A',[0,0],'MC_row',[0,0],'MC_col',[0,0]);
 
 
 for ii = 1: length(type_legend)
@@ -157,6 +158,10 @@ for ii = 1: length(type_legend)
     statistic_table(ii).form_factor = [min([tmp.form_factor]),max([tmp.form_factor])];
     statistic_table(ii).fill_factor = [min([tmp.fill_factor]),max([tmp.fill_factor])];
     statistic_table(ii).A = [min([tmp.A]),max([tmp.A])];
+    B = [tmp.mass_center];
+    B = reshape(B,2,[])';
+    statistic_table(ii).MC_row = [min([B(:,1)]),max([B(:,1)])];
+    statistic_table(ii).MC_col = [min([B(:,2)]),max([B(:,2)])];
     % statistic plots
     %------------------
     Type_number_str{ii} = [type_legend{ii},'- #',num2str(statistic_table(ii).number)];
@@ -170,7 +175,7 @@ num_bin_form = linspace(min([statistic_table.form_factor]),max([statistic_table.
 % num_bin_fill = [0:0.1:1];
 num_bin_fill = linspace(min([statistic_table.fill_factor]),max([statistic_table.fill_factor]),n);%[0:0.1:1];
 num_bin_area = linspace(min([all_data.A]),max([all_data.A]),n);%[0:0.1:1];
-
+num_bin_mass_c = linspace(min([all_data.mass_center]),max([all_data.mass_center]),n);
 for ii = 1: length(type_legend)
     tmp = all_data(strcmp({all_data.type},type_legend{ii}));
     
@@ -185,6 +190,13 @@ for ii = 1: length(type_legend)
     [tmp_hist3] = hist([tmp.A],num_bin_area);
     Y3(:,ii) = tmp_hist3/statistic_table(ii).number;
     
+    % Mass Center
+    B = [tmp.mass_center];
+    B = reshape(B,2,[])';
+    [tmp_hist4] = hist(B(:,1),num_bin_mass_c);
+    Y4(:,ii) = tmp_hist4/statistic_table(ii).number;
+   [tmp_hist5] = hist(B(:,2),num_bin_mass_c);
+    Y5(:,ii) = tmp_hist5/statistic_table(ii).number;
 end
 if plot_flag
     figure(1);
@@ -199,7 +211,7 @@ if plot_flag
     set(gca,'XTickLabel',type_legend);
     %set(gca,'YLim', [-0.05,1.05]);
     title({'Form-Factor histogram'; 'Normalized by the number of object per type'})
-    legend(Type_number_str)
+    legend(Type_number_str);
     
     % ploting the patch histogram of the patch Area ( number of pix)
     %
@@ -208,7 +220,20 @@ if plot_flag
     set(gca,'XTickLabel',type_legend);
     %set(gca,'YLim', [-0.05,1.05]);
     title({'Area size [pix] histogram'; 'Normalized by the number of object per type'})
-    legend(Type_number_str)
+    legend(Type_number_str);
+    
+        figure(4);
+        subplot(2,1,1)
+    bar3(num_bin_mass_c,Y4);
+    set(gca,'XTickLabel',type_legend);
+    title('Row[%]');
+            subplot(2,1,2)
+    bar3(num_bin_mass_c,Y5);
+    set(gca,'XTickLabel',type_legend);
+    title('Col[%]');
+    %set(gca,'YLim', [-0.05,1.05]);
+    suptitle({'Mass-Center (% from tl)'; 'Normalized by the number of object per type'})
+    legend(Type_number_str);
 end
 % Explanation to the data analysis
 %==================================
