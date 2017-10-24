@@ -29,10 +29,10 @@ function [ S_final ] = W3_task1( masks_dir,image_dir,out_dir,statistic_table,plo
 % test mask
 %==============================
 if nargin<1
-    masks_dir = 'C:\Users\noamor\Documents\GitHub\team2\team2\block2\W2_task3\m1';
+    masks_dir = '../block2/W2_task3/m1';
 end
 if nargin<2
-    image_dir = 'C:\Users\noamor\Documents\GitHub\team2\team2\train';
+    image_dir = '../train';
 end
 if nargin<3
     out_dir = pwd;

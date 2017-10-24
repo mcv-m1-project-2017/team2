@@ -54,6 +54,6 @@ function [mask_copy] = OurDilate(mask, se)
     [row_diff,col_diff] = find(difference);
     %disp(row_diff);
     %disp(col_diff);
-    disp(nnz(difference));             % Display number of non-zero elements in the difference. If 0, the two images are the same
+    %disp(nnz(difference));             % Display number of non-zero elements in the difference. If 0, the two images are the same
 
 end
