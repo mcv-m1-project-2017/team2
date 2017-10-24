@@ -10,25 +10,33 @@ addpath(genpath(fileparts(mfilename('fullpath'))));
 
 % Set the path to the folders containing the train images and their masks
 image_folder = '../train/';
-mask_folder = '../train/mask/';
+mask_folder = '../block2/W2_task3/m1';
 
-% Read all images with specified extention, its png in our case
-filenames = dir(fullfile(image_folder, '*.png'));
+
 
 
 % TASK 1: Connected Component Labeling (CCL)
-%[] = W3_task1();
+%============================================================================
+% out put folder to save results
+out_dir = fullfile(pwd,'CCL');
+% use the statistic table to determine the boundries
+statistic_table = [];
+% ploting for each mask the Original Image with the Bounding Boxes
+plot_flag = false;
+[ S_final ] = W3_task1( mask_folder,image_folder,out_dir,statistic_table,plot_flag );
 
+%============================================================================
 
 % TASK 2: Sliding window/  Multiple detections
-size_min = 100;              % Figures collected from block1:
-size_max = 236;             % min_area = 899pixels, max_area = 55930pixels
+window_numel = [56000,12000];              % Figures collected from block1:
+ratio = 1;%[1.3,1,0.33];            % min_area = 899pixels, max_area = 55930pixels
 counter = 1;
 
-images_names = dir('../block2/W2_task3/m1');
+images_names = dir(mask_folder);
 for i=3:(length(images_names)-1)
     image = strcat(images_names(i).folder,'/',images_names(i).name);
-    [positive_bounding_boxes, counter] = W3_task2(image, images_names(i).name, size_min, size_max, counter);
+    [positive_bounding_boxes, counter] = W3_task2(image, images_names(i).name, window_numel, ratio, counter);
+    close all
 end
 
 % TASK 3: Improve efficiency of feature computation using the integral image
