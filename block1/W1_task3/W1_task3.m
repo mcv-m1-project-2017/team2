@@ -67,7 +67,7 @@ for ii = 1:length(all_image_data)
 
 
     extra_blue = max(b-max(r,g),0);
-    imRGB_B = im2bw(extra_blue,0.1);
+    imRGB_B = im2bw(extra_blue,0.075);
 %     figure
 %     imshow(imRGB_B);
 
