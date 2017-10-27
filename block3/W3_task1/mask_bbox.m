@@ -5,8 +5,8 @@ mask_out = false(size(mask));
 for ii = 1: length(win_can)
     
     % window
-    Idx_l = round([win_can(ii).y:win_can(ii).h+win_can(ii).y]');
-    Idx_c = round([win_can(ii).x:win_can(ii).w+win_can(ii).x]');
+    Idx_l = round([win_can(ii).y:win_can(ii).h+win_can(ii).y-1]');
+    Idx_c = round([win_can(ii).x:win_can(ii).w+win_can(ii).x-1]');
     [l,c] = meshgrid(Idx_l,Idx_c);
     mask_out(l,c) = mask(l,c);
 end
