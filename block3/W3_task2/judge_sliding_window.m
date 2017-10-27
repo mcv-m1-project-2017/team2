@@ -1,9 +1,11 @@
-function [score,bbox_coor] = judge_sliding_window(bounding_box)
+function [score,bbox_coor] = judge_sliding_window(bounding_box,weights)
 % Give a score between 0 and 1 to a bounding box that might contain a
 % traffic sign. The score is affected by the filling ratio
 %imshow(bounding_box);
-
-
+if nargin<2
+    
+weights = [2/5,2/5,1/5];
+end
 ratio_limits = [0.45,1.35];
 size_limits= [900,56000];
 mass_horiz_limits = [0.48,0.52];
@@ -45,5 +47,5 @@ end
 
         % I wrote it like this because I'm guessing we'll use more factors (LORENZO)
 bbox_coor = [min(J),min(I),w,h];
-[ score ,sign] = Bbox_score( bbox_coor,{min_bbox} );
+[ score ,sign] = Bbox_score( bbox_coor,{min_bbox} ,weights);
 end
