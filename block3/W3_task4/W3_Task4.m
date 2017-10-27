@@ -17,8 +17,13 @@ detection_file_list = {detection_file_list.name};
        
        
       [annotations, ~] = LoadAnnotations(gt_filename);
-    
+    if isempty(windowCandidates)
+        TP2 = 0;
+        FN2 = length(annotations);
+        FP2 = 0;
+    else
       [TP2,FN2,FP2] = PerformanceAccumulationWindow(windowCandidates, annotations);
+    end
         % 'detections'        List of windows marking the candidate detections
         % 'annotations'       List of windows with the ground truth positions of the objects
 
