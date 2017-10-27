@@ -1,12 +1,12 @@
-function [positive_bounding_boxes, counter] = W3_task2(img_path, img_name, A, ratio, counter)
+function [windowCandidates, counter] = W3_task2(img_path, file_id, A, ratio, out_dir,plot_flag)
 
 % This function takes an image, minimum and maximum values for each side of the
 % sliding window and returns a list of bounding boxes that returned a positive
 % detection. Multiple bounding boxes for the same object are avoided with the
 % call to 'bb_decider()'.
 dbstop if error
-positive_bounding_boxes = [];
-positive_bounding_boxes_coordinates = [];
+% positive_bounding_boxes = [];
+bbox_candidates = [];
 
 % Read image
 img = imread(img_path);
@@ -14,13 +14,22 @@ img = imread(img_path);
 
 % window size - according to the statistics analysis in the data set
 % Area size options [ max,median,min];
-if nargin < 3 
-A = [56000,12000];
+if nargin < 3
+    A = [56000,12000];
 end
 if nargin<4
-% Ratio optios [min,median,max]
-
-ratio = 1;%[1.3,1,0.33];
+    % Ratio optios [min,median,max]
+    
+    ratio = 1;%[1.3,1,0.33];
+end
+if nargin<5
+    out_dir = fullfile(pwd,'Sliding_window');
+end
+if ~isdir(out_dir)
+    mkdir(out_dir);
+end
+if nargin<6
+    plot_flag = false;
 end
 % all options
 %-----------
@@ -35,13 +44,13 @@ clr = hsv(size(Win_size,1));
 % for side_length=[size_min, floor((size_min+size_max)/2), size_max]          % Three different sliding window sizes
 suspicious_bBox = [];
 counter = 1;
-plot_flag = true;
+
 
 if plot_flag
     imshow(img); hold on
     axis equal
-     h_cur_win = rectangle('Position',[0,0,1,1],'EdgeColor','b','LineWidth',1);
-
+    h_cur_win = rectangle('Position',[0,0,1,1],'EdgeColor','b','LineWidth',1);
+    
 end
 step = 10;
 
@@ -50,34 +59,33 @@ for side_length=1:size(Win_size,1)%[size_max,size_min ]                        %
     for y=1:step:(height-Win_size(side_length,2))         % Slide vertically
         
         for x=1:step:(width-Win_size(side_length,1))      % Slide horizontally
-             number_of_non_zeroes = sum(img(y:y+Win_size(side_length,2),x:end)>0);
-             if number_of_non_zeroes == 0
-                 break
-             end
+            number_of_non_zeroes = sum(img(y:y+Win_size(side_length,2),x:end)>0);
+            if number_of_non_zeroes == 0
+                break
+            end
             w = Win_size(side_length,1);
             h = Win_size(side_length,2);
             if plot_flag
-
-                    set(h_cur_win,'Position',[x,y,w,h])
-
+                
+                set(h_cur_win,'Position',[x,y,w,h])
+                
                 pause(0.005);
             end
             bounding_box = imcrop(img,[x,y,w,h]);
             %imshow(bounding_box);
             [score, bbox_relative]= judge_sliding_window(bounding_box);
             
-            if score > 0.5     % If the confidence is high, save the bounding box
-                x_tmp =x+bbox_relative(1);
-                y_tmp =y+bbox_relative(2);
+            if score > 0.2     % If the confidence is high, save the bounding box
+                x_tmp =x+bbox_relative(1)-1;
+                y_tmp =y+bbox_relative(2)-1;
                 w_tmp =bbox_relative(3);
                 h_tmp =bbox_relative(4);
                 if plot_flag
                     rectangle('Position',[x_tmp,y_tmp,w_tmp,h_tmp],'EdgeColor',clr(side_length,:),'LineWidth',1); hold on
                 end
-                positive_bounding_boxes{counter} = bounding_box;
-                % Need to create a struct containing img_name también
-                suspicious_bBox = [suspicious_bBox,struct('x',x_tmp,'y',y_tmp,'w',w_tmp,'h',h_tmp)];
-                positive_bounding_boxes_coordinates(counter,:) = [x_tmp,y_tmp,w_tmp,h_tmp];
+                %                 positive_bounding_boxes{counter} = bounding_box;
+                % Need to create a struct containing file_id también
+                bbox_candidates(counter,:) = [x_tmp,y_tmp,w_tmp,h_tmp];
                 suspicious_scores(counter,:) = score;
                 counter = counter +1;
             end
@@ -88,10 +96,33 @@ for side_length=1:size(Win_size,1)%[size_max,size_min ]                        %
 end
 
 % Detect which bounding boxes refer to the same object
-[positive_bounding_boxes_coordinates,ia,ic ]= unique(positive_bounding_boxes_coordinates,'rows');
-suspicious_scores = suspicious_scores(ia);
- [positive_bounding_boxes] = remove_duplicates(positive_bounding_boxes, positive_bounding_boxes_coordinates,suspicious_scores);
+if isempty(bbox_candidates)
+    disp([file_id, ' has NO detections']);
+   
+    out_mask_name = fullfile(out_dir,[file_id,'_mask.png']);
+    imwrite(false(size(img)),out_mask_name);
+    out_mat_name = fullfile(out_dir,[file_id,'.mat']);
+    windowCandidates = [];
+    save(out_mat_name,'windowCandidates');
+else
+    [bbox_candidates,ia,~ ]= unique(bbox_candidates,'rows');
+    suspicious_scores = suspicious_scores(ia);
+    % positive_bounding_boxes = positive_bounding_boxes(ia);
+    [bbox_candidates,I2] = remove_duplicates(img, bbox_candidates,suspicious_scores);
+    windowCandidates = [];
+    for ss = 1: size(bbox_candidates,1)
+        windowCandidates = [windowCandidates,struct('x',bbox_candidates(ss,1),'y',bbox_candidates(ss,2),'w',bbox_candidates(ss,3),'h',bbox_candidates(ss,4))];
+    end
+    [ mask_out ] = mask_bbox( img,windowCandidates );
+    out_mask_name = fullfile(out_dir,[file_id,'_mask.png']);
+    imwrite(mask_out,out_mask_name);
+    out_mat_name = fullfile(out_dir,[file_id,'.mat']);
+    save(out_mat_name,'windowCandidates');
+    if plot_flag
+        close all
+        imagesc(I2);
+    end
+end
 
- A=1;
 end
 
