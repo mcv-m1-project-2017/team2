@@ -1,4 +1,4 @@
-function [out] = W3_task4_pix (all_data,our_mask_path,provided_mask_path)
+function [out] = pix_eval(all_data,our_mask_path,provided_mask_path)
 TP=0;
 FP=0;
 FN=0;
