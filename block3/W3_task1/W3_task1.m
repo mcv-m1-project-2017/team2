@@ -24,7 +24,7 @@
 %============
 %   1. results :
 %       List of BBox for each image.
-function [ S_final ] = W3_task1( masks_dir,image_dir,out_dir,statistic_table,plot_flag )
+function [ S_final ] = W3_task1( masks_dir,image_dir,out_dir,statistic_table,plot_flag,th_sym ,all_data)
 
 % test mask
 %==============================
@@ -36,6 +36,9 @@ if nargin<2
 end
 if nargin<3
     out_dir = pwd;
+end
+if nargin < 6 
+    th_sym = 0.72;
 end
 if ~isdir(out_dir)
     % output directory to save the results
@@ -68,7 +71,13 @@ for ii = 1: length(masks_list)
     % connect neigbour pixels
     %------------------------
     file_id = masks_list{ii}(1:9);
-    [ windowCandidates ] = find_bBox( cur_mask,file_id,statistic_table,plot_flag,fullfile(image_dir,[file_id,'.jpg']),ii );
+    
+    if nargin==7 % runn only on testing data
+        if all([all_data([strcmp({all_data.file_id},file_id)]).validation]==0)
+            continue
+        end
+    end
+    [ windowCandidates ] = find_bBox( cur_mask,file_id,statistic_table,plot_flag,fullfile(image_dir,[file_id,'.jpg']),ii ,th_sym);
     % save mat file
     [ mask_out ] = mask_bbox( cur_mask,windowCandidates );
     out_mask_name = fullfile(out_dir,[file_id,'_mask.png']);
