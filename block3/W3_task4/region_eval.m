@@ -39,9 +39,19 @@ detection_file_list = {detection_file_list.name};
         FP=FP+FP2;
         
    end
+   
 [precision, sensitivity, accuracy] = PerformanceEvaluationWindow(TP, FN, FP);
-out.precision   = precision;
-out.sensitivity = sensitivity;
-out.accuracy    = accuracy;
+
+% out.Specificity = TN / (TN+FP);
+out.TP  = TP;
+out.FN  = FN;
+out.FP  = FP;
+
+out.Recall      = TP/(TP+FN);
+out.Precision   = precision;
+out.Sensitivity = sensitivity;
+out.Accuracy    = accuracy;
+out.F1 = 2*(out.Precision*out.Recall)/(out.Precision+out.Recall);
+
 end
 
