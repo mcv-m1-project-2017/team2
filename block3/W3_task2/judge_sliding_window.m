@@ -4,7 +4,7 @@ function [score,bbox_coor] = judge_sliding_window(bounding_box,weights)
 %imshow(bounding_box);
 if nargin<2
     
-weights = [2/5,2/5,1/5];
+weights = [1/4,1/4,1/4,1/4];
 end
 ratio_limits = [0.45,1.35];
 size_limits= [900,56000];

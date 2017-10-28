@@ -36,7 +36,7 @@ if nargin<7
 end
 if nargin<8
     
-weights = [2/5,2/5,1/5];
+weights = [1/4,1/4,1/4,1/4];
 end
 % % all options
 % %-----------

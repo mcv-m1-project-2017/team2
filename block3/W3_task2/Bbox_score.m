@@ -48,7 +48,7 @@
 function [ score,sign ] = Bbox_score( bbox_rect_all, bbox_mask_all,weights )
 
 if nargin<3
-    weights = [2/5,2/5,1/5];
+    weights = [1/4,1/4,1/4,1/4];
 end
 load('score_maps.mat');
 
@@ -69,7 +69,7 @@ for ii = 1: size(bbox_rect_all,1)
     % Calc ratio
     ratio = bbox_rect(4)/bbox_rect(3);
     
-    
+    sym_score = symmetric_test(bbox_mask);
     
     % SCORING
     %========
@@ -104,7 +104,7 @@ for ii = 1: size(bbox_rect_all,1)
     % Choosing the best score
     [ff_vmc_best_score ,imax]= max(ff_vmc_score);
     sign{ii} = type_name{imax};
-    score(ii) = weights(1)*ff_vmc_best_score+weights(2)*hmc_score+weights(3)*ratio_score;
+    score(ii) = weights(1)*ff_vmc_best_score+weights(2)*hmc_score+weights(3)*ratio_score+weights(4)*sym_score;
 end
 
 end

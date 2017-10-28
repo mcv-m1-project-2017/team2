@@ -1,4 +1,4 @@
-function [] = W3_task2(mask_folder, A, ratio, step,out_dir,plot_flag,score_threshold,weights)
+function [] = W3_task2(mask_folder, A, ratio, step,out_dir,plot_flag,score_threshold,weights,all_data)
 
 % This function takes an image, minimum and maximum values for each side of the
 % sliding window and returns a list of bounding boxes that returned a positive
@@ -39,8 +39,10 @@ if nargin <7
 end
 if nargin<8
     
-    weights = [2/5,2/5,1/5];
+    weights = [1/4,1/4,1/4,1/4];
 end
+
+    
 % all options
 %-----------
 alloptions = combvec(A,ratio)';
@@ -55,7 +57,14 @@ images_names = dir(mask_folder);
 
 for i=3:(length(images_names)-1)
     img_path = strcat(images_names(i).folder,'/',images_names(i).name);
+    
+        
     file_id = images_names(i).name(1:9);
+    if nargin==9 % runn only on testing data
+        if all([all_data([strcmp({all_data.file_id},file_id)]).validation]==0)
+            continue
+        end
+    end
     img = imread(img_path);
     windowCandidates = sliding_window(img, file_id, Win_size,step, out_dir,plot_flag,score_threshold,weights);
     save_win_and_mask(img, windowCandidates,file_id,out_dir);
