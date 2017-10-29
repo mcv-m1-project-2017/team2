@@ -52,10 +52,10 @@ Win_size(:,2) = Win_size(:,1).*alloptions(:,2);
 Win_size = round(Win_size);
 [~,I] = sort(alloptions(:,1),'descend');
 Win_size = Win_size(I,:);
-images_names = dir(mask_folder);
+images_names = dir(fullfile(mask_folder,'*.png'));
 
 
-for i=3:(length(images_names)-1)
+for i=1:(length(images_names))
     img_path = strcat(images_names(i).folder,'/',images_names(i).name);
     
         
@@ -66,6 +66,7 @@ for i=3:(length(images_names)-1)
         end
     end
     img = imread(img_path);
+  %  B = imresize(img,scale)
     windowCandidates = sliding_window(img, file_id, Win_size,step, out_dir,plot_flag,score_threshold,weights);
     save_win_and_mask(img, windowCandidates,file_id,out_dir);
     close all
