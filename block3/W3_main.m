@@ -12,8 +12,9 @@ addpath(genpath(fileparts(mfilename('fullpath'))));
 addpath('../evaluation');
 addpath('../block1/W1_task4');
 % Set the path to the folders containing the train images and their masks
-image_folder = '../train/';
-mask_folder = '../block2/W2_task3/m1';
+% image_folder = '../train/';
+image_folder = '../test/';
+mask_folder = '../test';
 load('..\block1\W1_task2\statistic_of_all_types.mat');
 
 
@@ -21,18 +22,20 @@ load('..\block1\W1_task2\statistic_of_all_types.mat');
 % TASK 1: Connected Component Labeling (CCL)
 %============================================================================
 % out put folder to save results
-out_dir = fullfile(pwd,'Results\CCL');
+out_dir = fullfile(pwd,'Results_final_test\CCL');
 % use the statistic table to determine the boundries
 statistic_table = [];
 % ploting for each mask the Original Image with the Bounding Boxes
-plot_flag = true;
+plot_flag = false;
 
-detection_dir =fullfile(pwd,'Results\CCL');
+detection_dir =fullfile(pwd,'Results_final_test\CCL');
 annotation_dir = '..\train\gt';
 provided_mask_path = '..\train\mask';
 th_sym = 0.75;
 tic
-[ S_final ] = W3_task1( mask_folder,image_folder,out_dir,statistic_table,plot_flag ,th_sym,all_data);
+%[ S_final ] = W3_task1( mask_folder,image_folder,out_dir,statistic_table,plot_flag ,th_sym,all_data);
+[ S_final ] = W3_task1( mask_folder,image_folder,out_dir,statistic_table,plot_flag ,th_sym);
+
 A= toc;
 time_per_frame = toc/length(dir(fullfile(detection_dir,'*.png')));
 [region_out, pix_out] = W3_Task4 (annotation_dir, detection_dir,provided_mask_path,detection_dir);
@@ -47,12 +50,12 @@ display(Evaluation_pixel);
 window_numel = [56000,12000];              % Figures collected from block1:
 ratio = 1;%[1.3,1,0.33];            % min_area = 899pixels, max_area = 55930pixels
 step = 10;
-out_dir = fullfile(pwd,'Results\Sliding_window');
-score_threshold = 0.2;
-weights = [1/4,1/4,1/4,1/4];
-
+out_dir = fullfile(pwd,'Results_final_test\Sliding_window');
+score_threshold = 0.25;
+weights = [0,0,0,1];
+tic
 W3_task2(mask_folder, window_numel, ratio, step,out_dir,plot_flag,score_threshold,weights);
-
+toc
 
 %% TASK 3: Improve efficiency of feature computation using the integral image
 %[] = W3_task3();
