@@ -82,7 +82,7 @@ for ii = 1: length(masks_list)
     [ mask_out ] = mask_bbox( cur_mask,windowCandidates );
     out_mask_name = fullfile(out_dir,[file_id,'_mask.png']);
     imwrite(mask_out,out_mask_name);
-    out_mat_name = fullfile(out_dir,[file_id,'.mat']);
+    out_mat_name = fullfile(out_dir,[file_id,'_mask.mat']);
     save(out_mat_name,'windowCandidates');
     for jj = 1: length(windowCandidates)
         windowCandidates(jj).file_id = file_id;
