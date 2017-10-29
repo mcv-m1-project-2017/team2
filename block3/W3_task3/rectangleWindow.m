@@ -1,21 +1,21 @@
-function s = rectangleWindow(intIng, x, y, w, h)
+function s = rectangleWindow(intIng, x, y, h, w)
 
-  a = intIng(w, h);
+  a = intIng(h, w);
  
-  if (y - 1) > 0
-    b = intIng(w, y - 1);
+  if (x - 1) > 0
+    b = intIng(h, w - 1);
   else
     b = 0;
   end
   
-  if (x - 1) > 0
-    c = intIng(x - 1, h);
+  if (y - 1) > 0
+    c = intIng(y - 1, w);
   else
     c = 0;
   end
   
-  if and(((x - 1)>0) , ((y - 1)> 0))
-    d = intIng(x - 1, y - 1);
+  if and(((y - 1)>0) , ((x - 1)> 0))
+    d = intIng(y - 1, x - 1);
   else  
     d = 0;
   end
