@@ -66,9 +66,10 @@ for i=1:(length(images_names))
         end
     end
     img = imread(img_path);
-  %  B = imresize(img,scale)
+  
     windowCandidates = sliding_window(img, file_id, Win_size,step, out_dir,plot_flag,score_threshold,weights);
-    save_win_and_mask(img, windowCandidates,file_id,out_dir);
+    [ mask_out ] = mask_bbox( img,windowCandidates );
+    save_win_and_mask(mask_out, windowCandidates,file_id,out_dir);
     close all
 end
 
@@ -86,7 +87,7 @@ else
 end
 out_mask_name = fullfile(out_dir,[file_id,'_mask.png']);
 imwrite(mask_out,out_mask_name);
-out_mat_name = fullfile(out_dir,[file_id,'.mat']);
+out_mat_name = fullfile(out_dir,[file_id,'_mask.mat']);
 save(out_mat_name,'windowCandidates');
 
 

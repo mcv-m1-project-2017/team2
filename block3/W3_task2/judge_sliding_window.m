@@ -40,7 +40,7 @@ end
 
 mass_center = centerOfMass(min_bbox);
 mass_center = mass_center./size(min_bbox);
-if mass_center(2)>mass_horiz_limits(2) | mass_center(2)<mass_horiz_limits(1)
+if mass_center(2)>mass_horiz_limits(2) | mass_center(1)<mass_horiz_limits(1)
     return
 end
 
