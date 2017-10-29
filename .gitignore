@@ -5,6 +5,7 @@ block1/task1/results
 block1/task3/masks/*.png
 block1/task3/masks_test
 block1/masks
+block1/masks_test_dataset
 block1/test4bestThresholdWB/
 block2/masks
 block2/images
