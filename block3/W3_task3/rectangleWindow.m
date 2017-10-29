@@ -1,21 +1,21 @@
-function s = rectangleWindow(integral_image, x, y, w, h)
+function s = rectangleWindow(intIng, x, y, w, h)
 
-  a = integral_image(w, h);
+  a = intIng(w, h);
  
   if (y - 1) > 0
-    b = integral_image(w, y - 1);
+    b = intIng(w, y - 1);
   else
     b = 0;
   end
   
   if (x - 1) > 0
-    c = integral_image(x - 1, h);
+    c = intIng(x - 1, h);
   else
     c = 0;
   end
   
   if and(((x - 1)>0) , ((y - 1)> 0))
-    d = integral_image(x - 1, y - 1);
+    d = intIng(x - 1, y - 1);
   else  
     d = 0;
   end
