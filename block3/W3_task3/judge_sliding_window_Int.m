@@ -6,6 +6,7 @@ if nargin<2
     
 weights = [1/4,1/4,1/4,1/4];
 end
+
 ratio_limits = [0.45,1.35];
 size_limits= [900,56000];
 mass_horiz_limits = [0.48,0.52];
@@ -23,12 +24,15 @@ end
 % resize the bbox to the smallest frame possible that contains detections
 % to minimaze the box using oan integral image
 %find max and min value to crop according to those value
+minValue = min(bounding_box(:));
+maxValue = max(bounding_box(:));
+[x1,y1]=find (bounding_box == minValue,1,'last');
+[x2,y2]=find (bounding_box == maxValue,1,'first');
+min_bbox = bounding_box(x1:x2,y1:y2);
 
 
-
-min_bbox = bounding_box(min(I):max(I),min(J):max(J));
 [h,w] = size(min_bbox);
-
+bbox_coor = [y1,x1,w,h];
 % size limits (to skip outliers)
 if h*w < size_limits(1) | h*w > size_limits(2)
     return
