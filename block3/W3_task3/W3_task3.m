@@ -62,10 +62,12 @@ for i=1:(length(images_names))
         end
     end
     Im = imread(img_path);
-    Int_mask = integralImage(Im);
-    Int_mask = Int_mask(2:end,2:end);
+
+  
+     Int_mask = integralImage(Im);
+     Int_mask = Int_mask(2:end,2:end);
   %  B = imresize(img,scale)
-    windowCandidates = sliding_window_integral_image(Int_mask, Win_size,step, out_dir,plot_flag,score_threshold,weights);
+    windowCandidates = sliding_window_integral_image(Int_mask, Win_size,step, out_dir,plot_flag,score_threshold,weights,Im);
     [ mask_out ] = mask_bbox( Im,windowCandidates );
     save_win_and_mask(mask_out, windowCandidates,file_id,out_dir);
     close all

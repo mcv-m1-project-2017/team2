@@ -3,7 +3,7 @@ function s = rectangleWindow(intIng, x, y, h, w)
   a = intIng(h, w);
  
   if (x - 1) > 0
-    b = intIng(h, w - 1);
+    b = intIng(h, x - 1);
   else
     b = 0;
   end
