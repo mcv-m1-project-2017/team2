@@ -8,7 +8,7 @@ weights = [1/4,1/4,1/4,1/4];
 end
 ratio_limits = [0.45,1.35];
 size_limits= [900,56000];
-mass_horiz_limits = [0.45,0.55];
+mass_horiz_limits = [0.48,0.50];
 score = 0;
 siz = size(bounding_box);
 bbox_coor = [0,0,siz(2),siz(1)];

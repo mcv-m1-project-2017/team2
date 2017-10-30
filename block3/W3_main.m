@@ -14,7 +14,7 @@ addpath('../block1/W1_task4');
 % Set the path to the folders containing the train images and their masks
 % image_folder = '../train/';
 image_folder = '../test/';
-mask_folder = '../test';
+mask_folder = '..\block2\W2_task3\m1';
 load('..\block1\W1_task2\statistic_of_all_types.mat');
 
 
@@ -50,15 +50,33 @@ display(Evaluation_pixel);
 window_numel = [56000,12000];              % Figures collected from block1:
 ratio = 1;%[1.3,1,0.33];            % min_area = 899pixels, max_area = 55930pixels
 step = 10;
-out_dir = fullfile(pwd,'Results_final_test\Sliding_window');
+out_dir = fullfile(pwd,'Results\Sliding_window');
 score_threshold = 0.25;
-weights = [0,0,0,1];
+weights = [0,0,1,0];
 tic
-W3_task2(mask_folder, window_numel, ratio, step,out_dir,plot_flag,score_threshold,weights);
-toc
+W3_task2(mask_folder, window_numel, ratio, step,out_dir,plot_flag,score_threshold,weights,all_data);
+time_per_frame = toc/length(dir(fullfile(out_dir,'*.png')));
 
+[region_out_SLW, pix_out_SLW] = W3_Task4 (annotation_dir, out_dir,provided_mask_path,out_dir);
+Evaluation_region = struct2table(region_out_SLW);
+display(Evaluation_region);
+pix_out_SLW.time_per_frame = time_per_frame;
+Evaluation_pixel = struct2table(pix_out_SLW);
+display(Evaluation_pixel);
+save('Results\sliding_window_results.mat','region_out_SLW', 'pix_out_SLW');
 %% TASK 3: Improve efficiency of feature computation using the integral image
-%[] = W3_task3();
+out_dir_int = fullfile(pwd,'Results\Sliding_on_Integral_Im');
+tic
+ W3_task3(mask_folder, window_numel, ratio, step,out_dir_int,plot_flag,score_threshold,weights,all_data);
+time_per_frame = toc/length(dir(fullfile(out_dir_int,'*.png')));
+[region_out_int, pix_out_int] = W3_Task4 (annotation_dir, out_dir_int,provided_mask_path,out_dir_int);
+Evaluation_region = struct2table(region_out_int);
+display(Evaluation_region);
+pix_out_int.time_per_frame = time_per_frame;
+
+Evaluation_pixel = struct2table(pix_out_int);
+display(Evaluation_pixel);
+save('Results\sliding_int_results3.mat','region_out_int', 'pix_out_int');
 
 %% TASK 4:   Region-based evaluation
 % CCL - evaluation
@@ -71,20 +89,20 @@ provided_mask_path = '..\train\mask';
 % [precision_CCL, sensitivity_CCL, accuracy_CCL] = W3_Task4(annotation_dir, detection_dir);
 
 
-detection_dir2 = fullfile(pwd,'Results\Sliding_window');
+detection_dir2 = fullfile(pwd,'Results_final_test\Sliding_window');
 % [precision_SLW, sensitivity_SLW, accuracy_SLW] = W3_Task4(annotation_dir, detection_dir2);
 
 % Pixal evalution
 % CCL
-[region_out_CCL, pix_out_CCL] = W3_Task4 (annotation_dir, detection_dir,provided_mask_path,detection_dir,all_data);
+[region_out_CCL, pix_out_CCL] = W3_Task4 (annotation_dir, detection_dir,provided_mask_path,detection_dir);
 % [out_ccl] = W3_task4_pix (all_data,detection_dir,provided_mask_path);
 save('Results\CCL_results.mat','region_out_CCL', 'pix_out_CCL');
 % SLW
-[region_out_SLW, pix_out_SLW] = W3_Task4 (annotation_dir, detection_dir2,provided_mask_path,detection_dir2,all_data);
+[region_out_SLW, pix_out_SLW] = W3_Task4 (annotation_dir, detection_dir2,provided_mask_path,detection_dir2);
 save('Results\sliding_window_results.mat','region_out_SLW', 'pix_out_SLW');
 
 
-% [out_slw] = W3_task4_pix (all_data,detection_dir2,provided_mask_path);
+[out_slw] = W3_task3(all_data,detection_dir2,provided_mask_path);
 % save('Results\sliding_window_results.mat','precision_SLW', 'sensitivity_SLW', 'accuracy_SLW','out_slw');
 % TASK 5:   Improve efficiency of feature computation using convolutions. Compare with integral image approach
 %[] = W3_task5();
