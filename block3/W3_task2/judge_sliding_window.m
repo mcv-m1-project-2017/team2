@@ -8,7 +8,7 @@ weights = [1/4,1/4,1/4,1/4];
 end
 ratio_limits = [0.45,1.35];
 size_limits= [900,56000];
-mass_horiz_limits = [0.48,0.52];
+mass_horiz_limits = [0.45,0.55];
 score = 0;
 siz = size(bounding_box);
 bbox_coor = [0,0,siz(2),siz(1)];
@@ -40,7 +40,7 @@ end
 
 mass_center = centerOfMass(min_bbox);
 mass_center = mass_center./size(min_bbox);
-if mass_center(2)>mass_horiz_limits(2) | mass_center(1)<mass_horiz_limits(1)
+if mass_center(2)>mass_horiz_limits(2) | mass_center(2)<mass_horiz_limits(1)
     return
 end
 
