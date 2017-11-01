@@ -4,7 +4,7 @@ function [] = W4_task2(RGBimage)
    
    CalculateEdges(g_img); %DONE
    CalculateManualEdges(g_img);
-   DistanceTransform(g_img,bw_img);
+   DistanceTransform(g_img,bw_img); %DONE
    ChamferDistance(g_img);
        
 end
