@@ -12,8 +12,8 @@ addpath(genpath(fileparts(mfilename('fullpath'))));
 addpath('../evaluation');
 addpath('../block1/W1_task4');
 % Set the path to the folders containing the train images and their masks
-% image_folder = '../train/';
-image_folder = '../test/';
+ image_folder = '../train/';
+%image_folder = '../test/';
 mask_folder = '../block2/W2_task3/m1';
 load('../block1/W1_task2/statistic_of_all_types.mat');
 
@@ -22,19 +22,19 @@ load('../block1/W1_task2/statistic_of_all_types.mat');
 % TASK 1: Connected Component Labeling (CCL)
 %============================================================================
 % out put folder to save results
-out_dir = fullfile(pwd,'Results_final_test/CCL');
+out_dir = fullfile(pwd,'Results/CCL');
 % use the statistic table to determine the boundries
 statistic_table = [];
 % ploting for each mask the Original Image with the Bounding Boxes
 plot_flag = false;
 
-detection_dir =fullfile(pwd,'Results_final_test/CCL');
+detection_dir =fullfile(pwd,'Results/CCL');
 annotation_dir = '../train/gt';
 provided_mask_path = '../train/mask';
 th_sym = 0.75;
 tic
-%[ S_final ] = W3_task1( mask_folder,image_folder,out_dir,statistic_table,plot_flag ,th_sym,all_data);
-[ S_final ] = W3_task1( mask_folder,image_folder,out_dir,statistic_table,plot_flag ,th_sym);
+[ S_final ] = W3_task1( mask_folder,image_folder,out_dir,statistic_table,plot_flag ,th_sym,all_data);
+%[ S_final ] = W3_task1( mask_folder,image_folder,out_dir,statistic_table,plot_flag ,th_sym);
 
 A= toc;
 time_per_frame = toc/length(dir(fullfile(detection_dir,'*.png')));
