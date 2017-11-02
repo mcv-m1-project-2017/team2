@@ -1,0 +1,3 @@
+function [] = CalculateManualEdges(img)
+
+end
