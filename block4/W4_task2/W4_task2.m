@@ -19,7 +19,7 @@ threshold = 0.1;
 
 % Loop on each mask
 for ii = 1: length(masks_list)
-   
+   tic
    mask = (imread(strcat('../block3/results/CCL/',masks_list{ii})));
    ccl_coordinates = load(strcat('../block3/results/CCL/',strtok(masks_list{ii},'_'),'_mask.mat'));
    % Sometimes our masks are entirely black (no sign will be detected) and
@@ -82,4 +82,5 @@ for ii = 1: length(masks_list)
 %     a good match using the distance transform technique
 %    
        
+end
 end
