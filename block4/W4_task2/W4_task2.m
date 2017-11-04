@@ -83,4 +83,5 @@ for ii = 1: length(masks_list)
 %    
        
 end
+toc
 end
