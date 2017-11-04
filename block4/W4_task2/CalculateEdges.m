@@ -7,7 +7,7 @@ function [] = CalculateEdges (img, bw)
     prewitt_grey = edge(img,'Prewitt');
     roberts_grey = edge(img,'Roberts');
     laplacianOfGausian_grey = edge(img,'log');
-    zerocross_grey = edge(img,'zerocross');
+    zerocross_grey = edge(img,'zerocross',0);
     
     % BW
     sobel_bw = edge(bw,'Sobel');
@@ -15,7 +15,7 @@ function [] = CalculateEdges (img, bw)
     prewitt_bw = edge(bw,'Prewitt');
     roberts_bw = edge(bw,'Roberts');
     laplacianOfGausian_bw = edge(bw,'log');
-    zerocross_bw = edge(bw,'zerocross');
+    zerocross_bw = edge(bw,'zerocross',0);
     
     subplot(4,3,1), imshow(sobel_grey); title('Grey Sobel');
     subplot(4,3,2), imshow(canny_grey); title('Grey Canny');

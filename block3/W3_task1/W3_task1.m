@@ -72,7 +72,7 @@ for ii = 1: length(masks_list)
     %------------------------
     file_id = masks_list{ii}(1:9);
     
-    if nargin==7 % runn only on testing data
+    if nargin==7 % run only on testing data
         if all([all_data([strcmp({all_data.file_id},file_id)]).validation]==0)
             continue
         end
