@@ -7,6 +7,11 @@
 % Task 2: Template matching using Distance Transform and chamfer distance
 % Task 3: Perform object based evaluation
 
+% General Links\paths
+Given_gt_path = '..\train\gt';
+CCL_results_path = '..\block3\Results\CCL';
+SLW_results_path = '..\block3\Results\Sliding_window';
+
 % Task 1
 W4_task1;
 
