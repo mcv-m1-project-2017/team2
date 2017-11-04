@@ -29,13 +29,13 @@ if (method==1)
 
 elseif (method==2)
     %METHOD2: Using CC
-    annotation_dir = ;%CCL_results_path;
+    annotation_dir = Given_gt_path;
     out_dir_int =fullfile(pwd,'Results/CCL');
     provided_mask_path = '../train/mask';
 
 else
     %METHOD3: Using SLW
-    annotation_dir = ;%SLW_results_path;
+    annotation_dir = Given_gt_path;
     out_dir_int = fullfile(pwd,'Results/Sliding_window');
     provided_mask_path = '../train/mask';
 
