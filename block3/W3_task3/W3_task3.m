@@ -87,7 +87,7 @@ else
 end
 out_mask_name = fullfile(out_dir,[file_id,'_mask.png']);
 imwrite(mask_out,out_mask_name);
-out_mat_name = fullfile(out_dir,[file_id,'.mat']);
+out_mat_name = fullfile(out_dir,[file_id,'_mask.mat']);
 save(out_mat_name,'windowCandidates');
 
 

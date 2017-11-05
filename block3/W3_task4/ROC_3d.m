@@ -1,3 +1,4 @@
+
 clrr= hsv(size(pix_out,2));
 
 
@@ -14,23 +15,30 @@ clrr= hsv(size(pix_out,2));
         end
         if isempty(region_out(ii,jj).Recall)
             Recallreg(ii,jj) = nan;
+            
         else
             Recallreg(ii,jj) = region_out(ii,jj).Recall;
+            
         end
         if isempty(pix_out(ii,jj).Recall)
             Recallpix(ii,jj) = nan;
         else
             Recallpix(ii,jj) = pix_out(ii,jj).Recall;
+            
         end
         if isempty(pix_out(ii,jj).Precision)
             Precisionpix(ii,jj) = nan;
+            F1px(ii,jj)=nan;
         else
             Precisionpix(ii,jj) = pix_out(ii,jj).Precision;
+            F1px(ii,jj)=pix_out(ii,jj).F1;
         end
-        if isempty(region_out(ii,jj).precision)
+        if isempty(region_out(ii,jj).Precision)
             Precisionreg(ii,jj) = nan;
+            F1reg(ii,jj)=nan;
         else
-            Precisionreg(ii,jj) = region_out(ii,jj).precision;
+            Precisionreg(ii,jj) = region_out(ii,jj).Precision;
+            F1reg(ii,jj)=region_out(ii,jj).F1;
         end
         
     end
@@ -65,7 +73,7 @@ ylim([0,1]);
 
 
 suptitle({'Sliding window - Recall vs Precision';'weights and score threshold'});
-W = repmat([1:18],9,1);
+W = repmat([1:8],6,1);
 figure(2)
 subplot(1,2,1)
 surf(th_score,W,(Precisionpix.^2+Recallpix.^2).^0.5);
@@ -80,3 +88,22 @@ ylabel('weights comination');
 xlabel('Threshold');
 zlabel('sqrt(Recall^2+Precison^2)');
 title('Region based Evaluation');
+
+
+
+figure(3)
+subplot(1,2,1)
+surf(th_score,W,F1px);
+ylabel('weights comination');
+xlabel('Threshold');
+zlabel('sqrt(Recall^2+Precison^2)');
+
+title('Pixel based Evaluation');
+subplot(1,2,2)
+surf(th_score,W,F1reg);
+ylabel('weights comination');
+xlabel('Threshold');
+zlabel('sqrt(Recall^2+Precison^2)');
+title('Region based Evaluation');
+
+suptitle({'Sliding Integral Image - F1- mesure';'weights and score threshold'});
