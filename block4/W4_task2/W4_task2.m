@@ -1,7 +1,10 @@
-function [] = W4_task2()
+function [] = W4_task2(mask_dir,out_dir,th_input)
 
 %%%% Settings %%%%
-masks_list = dir(fullfile('../block3/results/CCL/','*.png'));
+if ~isdir (out_dir)
+    mkdir(out_dir)
+end
+masks_list = dir(fullfile(mask_dir,'*.png'));
 masks_list = {masks_list.name};
 
 circle_template = imread('W4_task2/templates/circulo.png');
@@ -21,11 +24,14 @@ threshold = 0.1;
 tic
 for ii = 1: length(masks_list)
    
-   mask = (imread(strcat('../block3/results/CCL/',masks_list{ii})));
-   ccl_coordinates = load(strcat('../block3/results/CCL/',strtok(masks_list{ii},'_'),'_mask.mat'));
+   mask = (imread(strcat(mask_dir,'/',masks_list{ii})));
+   ccl_coordinates = load(strcat(mask_dir,'/',strtok(masks_list{ii},'_'),'_mask.mat'));
    % Sometimes our masks are entirely black (no sign will be detected) and
    % sometimes they contain more than one positive detection (>1 sign?)
+   count = 0;
+   windowCandidates = [];
    if ~isempty(ccl_coordinates.windowCandidates)
+
         for c2=1:length(ccl_coordinates.windowCandidates)
            %mask_centre_x = floor(ccl_coordinates.windowCandidates(c2).x+(ccl_coordinates.windowCandidates(c2).w/2));
            %mask_centre_y = floor(ccl_coordinates.windowCandidates(c2).y+(ccl_coordinates.windowCandidates(c2).h/2));
@@ -44,7 +50,10 @@ for ii = 1: length(masks_list)
            end
            cropped_sign = mask_only_edges(y1:y2,x1:x2);
            sum = computeSum(cropped_sign, circle_template, square_template, triangleUp_template, triangleDown_template);
-           [~,index] = min(sum);
+           [M,index] = min(sum);
+           % normalizing
+           M = M/numel(cropped_sign);
+           if M<th_input
            if index == 1
                disp('It is a circle');
            elseif index == 2
@@ -53,6 +62,12 @@ for ii = 1: length(masks_list)
                disp('It is a triangleUp');
            elseif index == 4
                disp('It is a triangleDown');
+           end
+           count = count+1;
+           windowCandidates = [windowCandidates;ccl_coordinates.windowCandidates(c2)];
+           signtype{count} = index;
+           
+               
            end
         end
            % Edges computed by canny, gradient magnitude or others.
@@ -82,7 +97,18 @@ for ii = 1: length(masks_list)
 %     – if the edges in B are slightly displaced from their ideal locations in T, we still get
 %     a good match using the distance transform technique
 %    
-       
+
+      if count==0
+        windowCandidates = [];
+        signtype = {};
+        mask_out  = false(size(mask));
+        %disp([all_masks{ii},' No shape were found']);
+    else
+    [ mask_out ] = mask_bbox( mask,windowCandidates );
+      end
+    file_name = [masks_list{ii}(1:9),'_mask.png'];
+    imwrite(mask_out,fullfile(out_dir,file_name));
+    save(fullfile(out_dir,[file_name(1:end-3),'mat']),'windowCandidates','signtype');
 end
 toc
 end
