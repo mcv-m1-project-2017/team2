@@ -60,53 +60,74 @@ siz = size(current_mask);
 current_mask = imresize(current_mask,siz_model); % cubic algorithem
 % Option 2 : resize the the model to fit the current mask
 N = numel(current_mask);
-    if plot_flag
-        figure
-        if method==1
-            method_name = 'MAE';
-        else
-            method_name = 'Correlation';
-        end
-        suptitle (method_name);
-        subplot(2,3,1)
-        imshow(current_mask);
-        title('mask (resized)');
+if plot_flag
+    figure
+    if method==1
+        method_name = 'MAE';
+    else
+        method_name = 'Correlation';
     end
+    suptitle (method_name);
+    subplot(2,3,1)
+    imshow(current_mask);
+    title('mask (resized)');
+end
 for ii = 1: length(models)
     
     if method ==1 % MSE
         tmp = abs(current_mask-models(ii).mask);
-        mae(ii) = sum(tmp(:))/N;
-
+        test_score(ii) = sum(tmp(:))/N;
+        
     elseif method ==2 % Correlation
-         tmp = normxcorr2(models(ii).mask,current_mask);
+        tmp = models(ii).mask;
+        test_score(ii) = corr2(models(ii).mask,current_mask);
+    elseif method==3
+        tmp = abs(current_mask-models(ii).mask);
+        mae_score(ii) = sum(tmp(:))/N;
+        corr_score(ii) = corr2(models(ii).mask,current_mask);
+        
     end
     
     if plot_flag
         subplot(2,3,ii+1)
         imshow(tmp);
-        title(['with ',models(ii).shape,': ',num2str(mae(ii))]);
+        title(['with ',models(ii).shape,': ',num2str(test_score(ii))]);
     end
 end
 
 % Check if one of the mae is under the error_threshold (in case of mae)
-    if method ==1 % MSE
-        [M,I] = min(mae); % min error
-        if M<threshold
-            sign_type = models(I).shape;
-        else
-            sign_type = ''; % return empty;
-            return
-        end
-        
-
-    elseif method ==2 % Correlation
-        
+if method ==1 % MSE
+    [M,I] = min(test_score); % min error
+    if M<threshold
+        sign_type = models(I).shape;
+    else
+        sign_type = ''; % return empty;
+        return
     end
     
-        if plot_flag
-        subplot(2,3,6)
-        imshow(models(I).mask);
-        title(['winning model : ',models(I).shape]);
+    
+elseif method ==2 % Correlation
+    [M,I] = max(test_score); % min error
+    if M>threshold
+        sign_type = models(I).shape;
+    else
+        sign_type = ''; % return empty;
+        return
     end
+elseif method == 3 % combined
+    [~,I] = min((1- corr_score).^2 + mae_score.^2);
+
+    if corr_score(I)>threshold(2) & mae_score(I)<threshold(1)
+        sign_type = models(I).shape;
+    else
+        sign_type = ''; % return empty;
+        return
+    end
+end
+
+if plot_flag
+    subplot(2,3,6)
+    imshow(models(I).mask);
+    title(['winning model : ',models(I).shape]);
+end
 end
