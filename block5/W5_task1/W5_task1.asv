@@ -44,12 +44,11 @@ function [outR, outB] = W5_task1(image)
     %% 
     % guess with segmented images is closer to R and with is closer to B
     %cluster_center
-    [szX,szY] = size(segmented_images{1});
-    outR = zeros(szX, szY/3);
-    outB = zeros(szX, szY/3);
+    [szX,szY] = size(segmented_images{1})
+    outB = zeros(szX, szY);
     for segment = 1: nColors
         'segment'
-       
+        disp(segment+1)
         
         red= segmented_images{segment}(:,:,1);
         green= segmented_images{segment}(:,:,2);
