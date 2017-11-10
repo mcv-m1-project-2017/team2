@@ -1,7 +1,7 @@
 
 % https://es.mathworks.com/help/images/examples/color-based-segmentation-using-k-means-clustering.html?prodcode=IP&language=en
 
-function [outR, outB] = W5_task1(image)
+function output = W5_task1(image)
     clc;
 %     close all;
     % Read Image
@@ -44,34 +44,39 @@ function [outR, outB] = W5_task1(image)
     %% 
     % guess with segmented images is closer to R and with is closer to B
     %cluster_center
-    [szX,szY] = size(segmented_images{1});
-    outR = zeros(szX, szY/3);
-    outB = zeros(szX, szY/3);
-    for segment = 1: nColors
-        'segment'
-       
+    [szX,szY]=size(segmented_images{1});
+    finalRed =zeros(szX,szY/3);
+    finalBlue=finalRed;
+    for segment = 1:nColors
+        [BW_red,~] = createMaskForRed(segmented_images{segment}, 0.9,0.13);
+        [BW_blue,~] = createMaskForBlue(segmented_images{segment}, 0.5,0.73);
         
-        red= segmented_images{segment}(:,:,1);
-        green= segmented_images{segment}(:,:,2);
-        blue= segmented_images{segment}(:,:,3);
 
-        r = sum(red(:))/numel(segmented_images{segment});
-        g = sum(green(:))/numel(segmented_images{segment});
-        b = sum(blue(:))/numel(segmented_images{segment});
-        mx = max(r,max(b,g));
-
-       
-         
+        se = strel('disk',3);
+        BW_red = imerode(BW_red,se);
+        BW_blue = imerode(BW_blue,se);
         
+        sumRed =sum(BW_red(:));
+        sumBlue= sum(BW_blue(:));
+        maxR = sum(finalRed(:));
+        maxB = sum(finalBlue(:));
         
-        if mx==r 
-           outR = red; 
-        elseif mx == b
-           outB = blue;
+        if (sumRed>maxR)
+            finalRed=BW_red;
         end
-        
+        if (sumBlue>maxB)
+            finalBlue=BW_blue;
+        end
+       
+           
     end
+figure;
+subplot(1,3,1);imshow(image);
+subplot(1,3,2);imshow(finalRed);
+subplot(1,3,3);imshow(finalBlue);
 
+output= or(finalRed, finalBlue);
+    
    
 
     %%
