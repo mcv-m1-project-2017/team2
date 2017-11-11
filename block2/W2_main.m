@@ -12,10 +12,11 @@
 clear all;close all;
 addpath(genpath(fileparts(mfilename('fullpath'))));
 
-image_folder = fullfile(fileparts(mfilename('fullpath')),'masks');
+%image_folder = fullfile(fileparts(mfilename('fullpath')),'masks');
+image_folder = '../block5/W5_task1/new_masks';
 %folder where the masks are
 
-filenames = dir(fullfile(image_folder, '*.png'));
+filenames = dir(fullfile(image_folder, '*.jpg'));
 %read all images with specified extention, its png in our case
 
 nmasks = numel(filenames);
@@ -105,12 +106,12 @@ time_table2 = struct2table(time);
 
 %Method 1: hole filling + opening
 tic
-files_names = dir('../block1/masks');
+files_names = dir('../block5/W5_task1/new_masks');
 for ii = 3:(size(files_names)-1)
     
     im_full_path = files_names(ii).name;
     original_mask = imread(strcat('../block1/masks/',im_full_path));
-    writing_path = strcat('W2_task3/m1/',files_names(ii).name(1:end-4),'.png');
+    writing_path = strcat('W2_task3/m1_new/',files_names(ii).name(1:end-4),'.png');
     new_mask = imdilate(original_mask, strel('square',4));
     new_mask = imfill(new_mask,'holes');
     new_mask = imopen(new_mask, se{1,1});
@@ -119,7 +120,7 @@ for ii = 3:(size(files_names)-1)
 end
 disp('M1:');
 toc
-W2_task3_eval('m1');
+W2_task3_eval('m1_new');
 
 %Method 2: hole filling + closing
 files_names = dir('../block1/masks');

@@ -14,9 +14,6 @@ addpath(genpath(fileparts(mfilename('fullpath'))));
 addpath(genpath('..\block3'));
 
 
-
-
-
 % General Links\paths
 Given_gt_path = '..\train\gt';
 provided_masks_dir = '..\train\mask';

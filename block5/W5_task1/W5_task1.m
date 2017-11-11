@@ -5,7 +5,7 @@ function output = W5_task1(image)
     clc;
 %     close all;
     % Read Image
-    %image = imread('C:\Users\MI-CUENTA\team2\train\Images\01.003074.jpg');
+    %image = ('C:\Users\MI-CUENTA\team2\train\Images\01.003074.jpg');
    
    % figure; imshow(image), title('H&E image');
 

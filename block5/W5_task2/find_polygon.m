@@ -10,7 +10,7 @@
 %
 %  Input parameters                                                         %
 %   ----------------                                                        %
-%        Im:  given Image ( after imphasizing the contours using LoG\Canny) %
+%        Im:  given Image (after emphasizing the contours using LoG\Canny) %
 %             NxMx1 , binary image                                          %
 %        tol:  tolerance for the shape angles. for exp: rectangle is 90+-tol%
 %              units [ angle- deg  ]                                        %
@@ -24,12 +24,12 @@
 %                   tol_rot can't exceed 180/num_sides. 
 %                       tol_rot<180/num_sides
 %                                                                           %
-%        plot_flag:(Optional) ploting a subplot with 4 images with the Bbox %
+%        plot_flag:(Optional) plotting a subplot with 4 images with the Bbox %
 %                  default : false                                          %
 %                                                                           %
 %   Output variables
 %   ----------------                                                        %
-%        bbox : Window canidates for traffoc sign. struct(x,y,w,h)          %
+%        bbox : Window canidates for traffic sign. struct(x,y,w,h)          %
 %        binary_mask : true are all the pixels inside of the polygon        %
 % -----------------------------------------------------------------------   %
 
@@ -42,7 +42,7 @@ if nargin<6
 end
 if isempty(Im)
     % trial
-    Image = imread('C:\Users\noamor\Documents\GitHub\team2\team2\train\00.003179.jpg');
+    Image = imread('..\train\00.003179.jpg');
     HSV_im = rgb2hsv(Image);
     edge(image, 'canny',thresh,sigma) 
     Im = edge(HSV_im(:,:,1),'canny');
