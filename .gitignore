@@ -7,6 +7,7 @@ block1/task3/masks_test
 block1/masks
 block1/masks_test_dataset
 block1/test4bestThresholdWB/
+block1/masks_old_lorenzo_GOOD
 block2/masks
 block2/images
 block2/W2_task3/m1/*.png
@@ -23,3 +24,4 @@ block4/W4_task1/Results_test_submit
 block3/Results_final_test
 block3/Results_test_submit
 block4/W4_task2/results
+block5/W5_task1/new_masks
