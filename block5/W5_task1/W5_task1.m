@@ -22,6 +22,7 @@ function output = W5_task1(image)
     % -->#3 colours not good results, 4 a bit just,5 perfect results
     nColors = 5;
 
+
     % repeat the clustering 3 times to avoid local minima
     [cluster_idx, cluster_center] = kmeans(ab,nColors,'distance','sqEuclidean', 'Replicates',3);
 
@@ -48,14 +49,27 @@ function output = W5_task1(image)
     finalRed =zeros(szX,szY/3);
     finalBlue=finalRed;
     for segment = 1:nColors
-        [BW_red,~] = createMaskForRed(segmented_images{segment}, 0.9,0.13);
-        [BW_blue,~] = createMaskForBlue(segmented_images{segment}, 0.5,0.73);
+%         [BW_red,~] = createMaskForRed(segmented_images{segment}, 0.9,0.13);
+%         [BW_blue,~] = createMaskForBlue(segmented_images{segment}, 0.5,0.73);
+        r=segmented_images{segment}(:,:,1);
+        g=segmented_images{segment}(:,:,2);
+        b=segmented_images{segment}(:,:,3);
         
-
+        extra_blue = max(b-max(r,g),0);
+        BW_blue = im2bw(extra_blue,0.1);
+     
+        extra_red = max(r-max(b,g),0);
+        BW_red = im2bw(extra_red,0.1);
+    
+        
         se = strel('disk',3);
         BW_red = imerode(BW_red,se);
         BW_blue = imerode(BW_blue,se);
-        
+        figure;
+subplot(1,3,1);imshow(segmented_images{segment});
+subplot(1,3,2);imshow(BW_red);
+subplot(1,3,3);imshow(BW_blue);
+
         sumRed =sum(BW_red(:));
         sumBlue= sum(BW_blue(:));
         maxR = sum(finalRed(:));
