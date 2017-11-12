@@ -54,6 +54,8 @@ if nargin<2
     % default is triangle;
     num_sides = 4;
 end
+min_dist = 30; % half of the size of min side
+
 if nargin<1 | isempty(BW)
     % trial
     %Image = imread('..\train\00.003179.jpg'); % circle
@@ -92,7 +94,7 @@ if nargin<1 | isempty(BW)
         imshow(BW)
         subplot(1,4,4)
         imshow(labels);
-          title('label')
+        title('label')
         figure(2)
         imshow(BW)
         suptitle(['Sigma: ', num2str(sigma),',Th: ', num2str(thresh)]);
@@ -106,8 +108,8 @@ end
 % tange of theta is -90:90, the angle is from [1,1] - top left corner of
 % the image - the angle of the line will be theta+90;
 % setting res_theta  = 0.5;
-angles = initial_angle+360/num_sides*[0:num_sides-1];
-angles = mod(angles,180);
+original_angle = initial_angle+360/num_sides*[0:num_sides-1];
+angles = mod(original_angle,180);
 angles = angles - 90;
 % colors of each side
 clr_side = hsv(num_sides);
@@ -133,7 +135,7 @@ if plot_flag
 end
 tol_vec = [-tol:0.5:tol];
 
-all_points = [0,0];
+%all_points = [0,0];
 for ii = 1: num_sides
     current_angle = tol_vec(:)+repmat(angles(ii)+[-tol_rot:0.5:tol_rot],length(tol_vec),1);
     current_angle = unique(current_angle(:));
@@ -148,7 +150,8 @@ for ii = 1: num_sides
     x = current_T(P(:,2)); y = R(P(:,1));
     % min-length ==16 , because min size of traffic sign is 900== 30X30 ,
     % tolerance of 10 pix
-    lines = houghlines(BW,current_T,R,P,'fillgap',6,'MinLength',22);
+    gap = 6;
+    lines = houghlines(BW,current_T,R,P,'fillgap',gap,'MinLength',22);
     siz_im = size(BW);
     max_len = 0;
     C = 0;
@@ -172,35 +175,179 @@ for ii = 1: num_sides
             plot(xy(2,1),xy(2,2),'x','LineWidth',2,'Color','red'); hold on
         end
         % Determine the endpoints of the longest line segment
-        len = norm(lines(k).point1 - lines(k).point2);
-        if ( len > max_len)
-            max_len = len;
-            xy_long = xy;
-        end
+        %         len = norm(lines(k).point1 - lines(k).point2);
+        %         if ( len > max_len)
+        %             max_len = len;
+        %             xy_long = xy;
+        %         end
     end
     % save line in struct
-    all_sides(ii).lines = new_line;
+    %all_sides(ii).lines = new_line;
     
     % All points in the lines
     p1 = reshape([new_line.point1],2,[]);
     p1 = p1';
-        p2 = reshape([new_line.point2],2,[]);
+    p2 = reshape([new_line.point2],2,[]);
     p2 = p2';
-    all_points = [all_points;[p1;p2]];
+    % conc if there is a small gap
+    D = pdist2(p2,p1);
+    dist_current_lines = D(diag(ones(size(p1,1))));
+   % dist_current_lines = repmat(dist_current_lines,
+   figure
+   imagesc(D);
+    D(triu(ones(size(D)))) = -1;
+    figure
+    imagesc(D);
+    [idx2,idx1]=find(D<min_dist & D>=0);
+    % create addition lines
+    if plot_flag
+        tmp.p1 = p1(idx1,:);
+        tmp.p2 = p2(idx2,:);
+        plot_line_on_image(BW,tmp);
+        title(['Additional lines #', num2str(ii)]);
+    end
+    p1 = [p1; p1(idx1,:)];
+    p2 = [p2; p2(idx2,:)];
+    
+    if original_angle(ii)>=180
+        all_points(ii).p1 = p2;
+        all_points(ii).p2 = p1;
+    else
+        all_points(ii).p1 = p1;
+        all_points(ii).p2 = p2;
+    end
+end
+
+if plot_flag
+    plot_line_on_image(BW,all_points);
+    title('All lines detected by hough');
 end
 % circular shape
 
-all_sides(num_sides+1) = all_sides(1);
-% Collect all the lines that together can create a rectangle
-R=pdist(all_points);
-Z = linkage(all_points,'ward','euclidean','savememory','on');
-c = cluster(Z,'maxclust',length(all_points(:,1))/2);
-figure
-scatter(all_points(:,1),all_points(:,2),10,c)
-
+%all_sides(num_sides+1) = all_sides(1);
+% % Collect all the lines that together can create a rectangle
+% R=pdist(all_points);
+% Z = linkage(all_points,'ward','euclidean','savememory','on');
+% c = cluster(Z,'maxclust',length(all_points(:,1))/2);
+% figure
+% scatter(all_points(:,1),all_points(:,2),10,c)
+%link_list_for the first line group
+all_points(1).link = [1:size(all_points(1).p1,1)]';
+new_all_points(1).link = all_points(1).link;
 for ii = 1: num_sides
-   % find match points
-%     X = randn(100, 5);
-%     Y = randn(25, 5);
-%     D = pdist2(X,Y,'euclidean');
+    % find match points
+    %     X = randn(100, 5);
+    %     Y = randn(25, 5);
+    % match clock wise!
+    if ii== num_sides
+        sec_grp = 1;
+    else
+        sec_grp = ii+1;
+    end
+    D = pdist2(all_points(ii).p2 ,all_points(sec_grp).p1 ,'euclidean');
+    min_D_vec = min(D);
+    min_D = repmat(min_D_vec,size(D,1),[]);
+    if 0%plot_flag
+        figure
+        plot(D(:),'.'); hold on
+        
+        plot([1,length(D(:))],[min_dist,min_dist],'LineWidth',2,'Color',[1,0,0]);hold on
+        
+        
+        title('dist between corners');
+        if 0
+            subplot(1,2,1)
+            imagesc(D);
+            title('dist between corners');
+            subplot(1,2,2)
+            tmp = D;
+            tmp(D~=min_D) = nan;
+            imagesc(tmp);
+            title('min distance for each corner');
+        end
+    end
+    %D(D~=min_D) = min_dist+1;
+    [idx_p2,idx_p1]  = find(D<min_dist);
+    %     new_all_points(ii).p2 = all_points(ii).p2(idx_p2,:);
+    %     new_all_points(ii).p1 = all_points(ii).p1(idx_p2,:);
+    %     if ii>1
+    %     new_all_points(ii).link = new_all_points(ii).link(idx_p2,:);
+    %
+    %     else
+    % new_all_points(ii).link = all_points(ii).link;
+    % new_all_points(ii+1).link = new_all_points(ii).link(idx_p2);
+    
+    %     end
+    new_all_points(sec_grp).p2 = all_points(sec_grp).p2(idx_p1,:);
+    new_all_points(sec_grp).p1 = all_points(sec_grp).p1(idx_p1,:);
+    new_all_points(sec_grp).link = new_all_points(ii).link(idx_p2);
+    if ii ==1
+        new_all_points(ii).link = all_points(ii).link(idx_p2);
+        
+    else
+        new_all_points(ii).link = new_all_points(ii).link(idx_p2);
+    end
+    new_all_points(sec_grp).link = new_all_points(ii).link;
+    new_all_points(ii).p2 = all_points(ii).p2(idx_p2,:);
+    new_all_points(ii).p1 = all_points(ii).p1(idx_p2,:);
+    all_points(ii).p1 = all_points(ii).p1(unique(idx_p2),:);
+    all_points(ii).p2 = all_points(ii).p2(unique(idx_p2),:);
+    
+    all_points(sec_grp).p1 = all_points(sec_grp).p1(unique(idx_p1),:);
+    
+    all_points(sec_grp).p2 = all_points(sec_grp).p2(unique(idx_p1),:);
+    
+    
+    
+    
+end
+
+% only keep the linked groups
+C = intersect( new_all_points(1).link, new_all_points(2).link);
+% the only "num_sides" sides that are linked - completly
+for ii = 1: num_sides
+    idx = ismember(new_all_points(ii).link,C);
+    new_all_points(ii).p1= new_all_points(ii).p1(idx,:);
+    new_all_points(ii).p2= new_all_points(ii).p2(idx,:);
+    new_all_points(ii).link =new_all_points(ii).link(idx);
+end
+if plot_flag
+    if isempty(new_all_points(1).p1)
+        disp('No lines were found')
+    else
+        plot_line_on_image(BW,new_all_points);
+        title('All lines detected by hough after linking the lines');
+    end
+end
+
+end
+
+function plot_line_on_image(BW,all_points)
+figure
+imshow(BW); hold on
+clr_side = hsv(length(all_points));
+if isfield(all_points,'link')
+    clr_side = hsv(max(all_points(1).link));
+end
+for ii = 1: length(all_points)
+    cur_lines = all_points(ii);
+    for k = 1:size(cur_lines.p1,1)
+        xy = [cur_lines.p1(k,:); cur_lines.p2(k,:)];
+        if isfield(all_points,'link')
+            C = cur_lines.link(k);
+        else
+            C= ii;
+        end
+        
+        
+        
+        plot(xy(:,1),xy(:,2),'LineWidth',2,'Color',clr_side(C,:));hold on
+        
+        % Plot beginnings and ends of lines
+        plot(xy(1,1),xy(1,2),'x','LineWidth',2,'Color','yellow');hold on
+        plot(xy(2,1),xy(2,2),'x','LineWidth',2,'Color','red'); hold on
+        
+    end
+end
+
 end
