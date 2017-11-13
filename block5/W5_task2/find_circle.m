@@ -63,8 +63,9 @@ binary_mask = false(size(BW));
 [accum, circen, cirrad,~ ]  = CircularHough_Grd(BW, [10,120], 10, 20);
 
 if plot_flag
-figure(10); subplot(2,2,1);imagesc(accum); axis image;
-  subplot(2,2,2);imagesc(BW); colormap('gray'); axis image;
+figure(10); subplot(2,2,1);imagesc(accum); axis image; title('accumulation matrix');
+subplot(2,2,2);imagesc(BW); colormap('gray'); title('Y from YCbCr');
+  subplot(2,2,4);imagesc(BW); colormap('gray'); axis image;
  hold on;
  plot(circen(:,1), circen(:,2), 'r+');
  for k = 1 : size(circen, 1),
@@ -72,15 +73,25 @@ figure(10); subplot(2,2,1);imagesc(accum); axis image;
      rgb_mask = insertShape(rgb_mask,'FilledCircle',[circen(k,1), circen(k,2), cirrad(k)],'color',[255,0,0]);
      
  end
- 
+ title('Marked circle');
  binary_mask( rgb_mask(:,:,1)>0) = true;
  subplot(2,2,3);
  imshow(binary_mask);
+title('Binary mask');
 
-
+suptitle('accumulation Circular Hough-transform');
 
 end
+if all(binary_mask(:) == 0)
+    bbox = [];
+else
+    [bbox.y,bbox.x] = find(binary_mask,1,'first');
+    [y2,x2] = find(binary_mask,1,'last');
+    
 
+   bbox.w = x2 -bbox.x;
+   bbox.h = y2- bbox.y;
+end
 
 
 end
