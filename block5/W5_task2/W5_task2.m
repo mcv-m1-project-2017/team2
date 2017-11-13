@@ -9,7 +9,7 @@ addpath('..\block3\W3_task1');
 filelist= dir(fullfile(im_dir,'*.png'));
 filelist = {filelist.name};
 jpg_dir = 'C:\Users\noamor\Documents\GitHub\team2\team2\test';
-if nargin <4 
+if nargin <4
     plot_flag = false;
 end
 for ii = 1: length(filelist)
@@ -20,20 +20,20 @@ for ii = 1: length(filelist)
     load([file_name(1:end-3),'mat']);
     YCbCr_im = RGB_im;%rgb2ycbcr(RGB_im);
     Im_real_file = imread(fullfile(jpg_dir,[filelist{ii}(1:9),'.jpg']));
-   Im_real_file = rgb2ycbcr( Im_real_file);
-   
+    Im_real_file = rgb2ycbcr( Im_real_file);
+    
     [ bbox1,binary_mask1 ] = find_circle(Im_real_file(:,:,1),plot_flag);
-   
+    
     if isempty(bbox1)
         binary_mask1 = false(size(YCbCr_im));
     else
-    
+        
     end
     if ~isempty(bbox1)
         disp('WINNNN');
     end
     % For lines - using Canny edge detection
-     thresh = [0.15,0.27];
+    thresh = [0.15,0.27];
     sigma = 2.5;
     [BW] = edge(YCbCr_im(:,:,1), 'canny',thresh,sigma) ;
     % detect triangles UP
@@ -45,26 +45,34 @@ for ii = 1: length(filelist)
     if isempty(bbox2)
         binary_mask2 = false(size(YCbCr_im));
     else
-    [ binary_mask2 ] = mask_bbox( YCbCr_im,bbox2 );
+        [ binary_mask2 ] = mask_bbox( YCbCr_im,bbox2 );
     end
     if ~isempty(bbox2)
         disp('WINNNN');
     end
     % detect triangles DN
-[ bbox3,binary_mask3 ] = find_triangle_up( BW,tol,tol_rot,windowCandidates,plot_flag);%     % detect rectangles
+    [ bbox3,binary_mask3 ] = find_triangle_dn( BW,tol,tol_rot,windowCandidates,plot_flag);%     % detect rectangles
     if isempty(bbox3)
         binary_mask3 = false(size(YCbCr_im));
     else
-    [ binary_mask3 ] = mask_bbox( YCbCr_im,bbox3 );
-    end    
-if ~isempty(bbox3)
+        [ binary_mask3 ] = mask_bbox( YCbCr_im,bbox3 );
+    end
+    if ~isempty(bbox3)
         disp('WINNNN');
     end
-%     num_sides= 4;
-%     [ bbox4,binary_mask4 ] = find_polygon( BW,num_sides,tol,initial_angle,tol_rot,plot_flag);
-%     mask = binary_mask1 |binary_mask2 | binary_mask3 | binary_mask4;
-    mask = binary_mask1|binary_mask2 | binary_mask3 ;
-    windowCandidates = [bbox1;bbox2;bbox3];
+    %     num_sides= 4;
+    [ bbox4,binary_mask4 ] = find_rectangle(BW,tol,tol_rot,windowCandidates,plot_flag);
+    if isempty(bbox4)
+        binary_mask4 = false(size(YCbCr_im));
+    else
+        [ binary_mask4 ] = mask_bbox( YCbCr_im,bbox4 );
+    end
+    if ~isempty(bbox4)
+        disp('WINNNN');
+    end
+    %     mask = binary_mask1 |binary_mask2 | binary_mask3 | binary_mask4;
+    mask = binary_mask1|binary_mask2 | binary_mask3|binary_mask4 ;
+    windowCandidates = [bbox1;bbox2;bbox3;bbox4];
     out_name= [filelist{ii}(1:9),'_mask.png'];
     imwrite(mask,fullfile(out_dir,out_name));
     save(fullfile(out_dir,[out_name(1:end-3),'mat']),'windowCandidates');

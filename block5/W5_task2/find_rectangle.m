@@ -36,7 +36,7 @@
 % ----------------------------------------------------------------------- %
 
 
-function [ bbox_out,mask_out ] = find_triangle_dn( BW,tol,tol_rot,windowCandidates,plot_flag)
+function [ bbox_out,mask_out ] = find_rectangle( BW,tol,tol_rot,windowCandidates,plot_flag)
 if nargin<5
     plot_flag = true;
 end
@@ -100,7 +100,7 @@ if nargin<1 | isempty(BW)
     
 end
 bbox_out  = [];
-angles = [-90 , 30,-30];
+angles = [-90 , 0,-90 , 0];
 
 % colors of each side
 num_sides = 3;
@@ -166,16 +166,16 @@ for  ww = 1: length( windowCandidates)
     %=====
     current_angle = tol_vec(:)+repmat(angles(2)+[-tol_rot:0.5:tol_rot],length(tol_vec),1);
     current_angle = unique(current_angle(:));
-    all_points2 = get_lines_from_Hough(cur_BW,H,T,R,current_angle,tol,min_dist,'p1(:,2)>p2(:,2)');
-        if isempty(all_points2.p1)
+    all_points2 = get_lines_from_Hough(cur_BW,H,T,R,current_angle,tol,min_dist,'p1(:,2)<p2(:,2)');
+    if isempty(all_points2.p1)
         break
     end
     %P-2
     %===
-    I = find(all_points2.p1(:,2)==min(all_points2.p1(:,2)));
+    I = find(all_points2.p1(:,2)==max(all_points2.p1(:,2)));
     p1 = all_points2.p1(I(1),:);
     all_points2.p1 = p1;%[all_points2.p1;p1];
-    I = find(all_points2.p2(:,2)==max(all_points2.p2(:,2)));
+    I = find(all_points2.p2(:,2)==min(all_points2.p2(:,2)));
     p2 = all_points2.p2(I(1),:);
     
     %Angle = atan2d(p2(1,2) - p1(1,2))./(p2(1,1) - p1(1,1))-90;
@@ -187,83 +187,36 @@ for  ww = 1: length( windowCandidates)
     %====
     current_angle = tol_vec(:)+repmat(angles(3)+[-tol_rot:0.5:tol_rot],length(tol_vec),1);
     current_angle = unique(current_angle(:));
-    all_points3 = get_lines_from_Hough(cur_BW,H,T,R,current_angle,tol,min_dist,'p1(:,2)<p2(:,2)');
-            if isempty(all_points3.p1)
+    all_points3 = get_lines_from_Hough(cur_BW,H,T,R,current_angle,tol,min_dist,'p1(:,1)<p2(:,1)');
+    if isempty(all_points3.p1)
         break
     end
     %P-3
     %===
-    I = find(all_points3.p1(:,2)==max(all_points3.p1(:,2)));
+    I = find(all_points3.p1(:,1)==max(all_points3.p1(:,1)));
     p1 = all_points3.p1(I(1),:);
     all_points3.p1 = p1;%[all_points3.p1;p1];
-    I = find(all_points3.p2(:,2)==min(all_points3.p2(:,2)));
+    
+    I = find(all_points3.p2(:,1)==min(all_points3.p2(:,1)));
     p2 = all_points3.p2(I(1),:);
     all_points3.p2 = p2;%[all_points3.p2;p2];
-    
-    %Angle = atan2d(p2(1,2) - p1(1,2))./(p2(1,1) - p1(1,1))-90;
-    
-    
-    % lines = get_lines_from_Hough(H,T,R,current_angle);
-    % 0 is vertical
-    % -90 is horizontal
-    
-    
-    %     if isempty(lines)
-    %         disp('bbox incorrect');
-    %         %bad_flag = 1;
-    %         break
-    %
-    %     end
-    %
-    %
-    %     C = 0;
-    %     if plot_flag
-    %         figure(2)
-    %         subplot(1,num_sides,ii);
-    %         imshow(cur_BW);hold on
-    %     end
-    %
-    %
-    %     p1 = reshape([lines.point1],2,[]);
-    %     p1 = p1';
-    %     p2 = reshape([lines.point2],2,[]);
-    %     p2 = p2';
-    %     theta = [lines.theta];
-    %     theta = theta(:);
-    %     %theta = wrapTo180(theta(:));
-    %     % conc if there is a small gap
-    %     D = pdist2(p2,p1);
-    %     thetaD = pdist2(theta,theta);
-    %     thetaD(thetaD>90) = 180-thetaD(thetaD>90);
-    %
-    %     % dist_current_lines = D(diag(ones(size(p1,1))));
-    %
-    %     %dist_current_lines = repmat(dist_current_lines,size(D,1),1,1);
-    %     D(diag(ones(size(p1,1)))) = -1 ;
-    %
-    %     [idx2,idx1]=find(D<min_dist & D>=0 & abs(thetaD)<=tol);
-    %     % create addition lines
-    %     if plot_flag
-    %         tmp(ii).p1 = p1(idx2,:);
-    %         tmp(ii).p2 = p2(idx1,:);
-    %         %         plot_line_on_image(BW,tmp);
-    %         %         title(['Additional lines #', num2str(ii)]);
-    %     end
-    %     p1 = [p1; p1(idx2,:)];
-    %     p2 = [p2; p2(idx1,:)];
-    %     Idx = find(p2(:,1)<p1(:,1));
-    %     dummy = p2;
-    %     p2(Idx) = p1(Idx);
-    %     p1(Idx) = dummy(Idx);
-    %     all_points(1).p1 = p1;
-    %     all_points(1).p2 = p2;
-    
-    
-    
-    %     if bad_flag
-    %         continue
-    %     end
-    
+    %P-4
+    %===
+    current_angle = tol_vec(:)+repmat(angles(4)+[-tol_rot:0.5:tol_rot],length(tol_vec),1);
+    current_angle = unique(current_angle(:));
+    all_points4 = get_lines_from_Hough(cur_BW,H,T,R,current_angle,tol,min_dist,'p2(:,2)<p1(:,2)');
+    if isempty(all_points4.p1)
+        break
+    end
+    %P-4
+    %===
+    I = find(all_points4.p1(:,2)==min(all_points4.p1(:,2)));
+    p1 = all_points4.p1(I(1),:);
+    all_points4.p1 = p1;%[all_points3.p1;p1];
+    I = find(all_points4.p2(:,2)==max(all_points4.p2(:,2)));
+    p2 = all_points4.p2(I(1),:);
+    all_points4.p2 = p2;%[all_points3.p2;p2];
+    %===
     
     min_deg = 60+[-tol,tol];
     c = 0;
@@ -273,6 +226,8 @@ for  ww = 1: length( windowCandidates)
     all_points(1) = all_points1;
     all_points(2) = all_points2;
     all_points(3) = all_points3;
+    all_points(4) = all_points4;
+    
     plot_line_on_image(cur_BW,all_points)
     
     
@@ -300,18 +255,31 @@ for  ww = 1: length( windowCandidates)
                         cur_p3.p1 = lines_out2.p1(pp3,:);
                         cur_p3.p2 = lines_out2.p2(pp3,:);
                         cur_p3.theta = lines_out2.theta(pp3,:);
-                        lines_out3 = find_match_lines(cur_p3, current_p,min_dist,min_deg);
-                        if ~isempty(lines_out3.p1) % WE HAVE A WINNER!!
-                            % WE HAVE A WINNER!!
-                            c=c+1;
-                            triange_canidates(c).side1 = current_p;
-                            triange_canidates(c).side2 = current_p2;
-                            triange_canidates(c).side3 = lines_out3(1);
-                            if ~all([windowCandidates.x]==-1)
-                                bbox_out = [bbox_out;windowCandidates(ww)];
+                        lines_out3 = find_match_lines(cur_p3, all_points4,min_dist,min_deg);
+                        if ~isempty(lines_out3.p1)
+                            for pp4 = 1: size(lines_out2.p1,1)
+                                cur_p4.p1 = lines_out3.p1(pp4,:);
+                                cur_p4.p2 = lines_out3.p2(pp4,:);
+                                cur_p4.theta = lines_out3.theta(pp4,:);
+                                lines_out4 = find_match_lines(cur_p4, current_p,min_dist,min_deg);
+                                if ~isempty(lines_out4.p1)
+                                    % WE HAVE A WINNER!!
+                                    % WE HAVE A WINNER!!
+                                    c=c+1;
+                                    rect_canidates(c).side1 = current_p;
+                                    rect_canidates(c).side2 = current_p2;
+                                    rect_canidates(c).side3 = cur_p3;
+                                    rect_canidates(c).side4 = cur_p4;
+                                    if ~all([windowCandidates.x]==-1)
+                                        bbox_out = [bbox_out;windowCandidates(ww)];
+                                    end
+                                    win_flag = 1;
+                                    break
+                                end
+                                if win_flag
+                                    break
+                                end
                             end
-                            win_flag = 1;
-                            break
                         end
                         if win_flag
                             break
@@ -324,19 +292,6 @@ for  ww = 1: length( windowCandidates)
             end
             
         end
-        %         all_points(sec_grp).p2 = all_points2.p2(idx_p1,:);
-        %         all_points(sec_grp).p1 = all_points2.p1(idx_p1,:);
-        %         all_points(sec_grp).link = [1:size(all_points2.p2,1)]';
-        %
-        %
-        %
-        %         all_points(ii).p2 = all_points(ii).p2(idx_p2,:);
-        %         all_points(ii).p1 = all_points(ii).p1(idx_p2,:);
-        %         old_link = all_points(ii).link(idx_p2);
-        %         all_points(ii).link = all_points(sec_grp).link;
-        %
-        
-        
         
         
         if win_flag
